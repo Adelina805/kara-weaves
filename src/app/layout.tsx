@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { inconsolata } from "@/lib/fonts";
+import karaWeavesLogo from "./kara-weaves-logo.png";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Kara Weaves — Fabric Pattern Designer",
   description: "Design custom woven fabric patterns with plain, waffle, and loose weaves.",
+  icons: {
+    icon: karaWeavesLogo.src,
+  },
 };
 
 export default function RootLayout({
