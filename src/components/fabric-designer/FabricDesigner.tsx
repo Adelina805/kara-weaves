@@ -39,9 +39,6 @@ export function FabricControls({
 }: FabricControlsProps) {
   return (
     <div className="p-4">
-      <p className="mb-4 text-xs text-stone-500">
-        Texture amount, softness, and intersection darkness use standard internal defaults.
-      </p>
       <PatternTypeSelect weaveType={design.weaveType} dispatch={dispatch} />
       <BodyColorControls body={design.body} dispatch={dispatch} />
       <StripeControls
