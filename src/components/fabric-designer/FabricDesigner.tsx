@@ -102,7 +102,7 @@ export function FabricCanvas({
           width={outputSize}
           height={outputSize}
           className={[
-            "max-h-full max-w-full rounded-xl border border-stone-200 bg-white shadow-sm touch-none",
+            "max-h-full max-w-full border border-stone-200 bg-white shadow-sm touch-none",
             isDragging ? "cursor-grabbing" : "cursor-grab",
           ].join(" ")}
           onPointerDown={onPointerDown}
