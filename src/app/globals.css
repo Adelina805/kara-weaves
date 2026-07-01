@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: var(--font-inconsolata), ui-monospace, monospace;
+}
+
 :root {
   color-scheme: light;
 }
 
 body {
   margin: 0;
+  font-family: var(--font-inconsolata), ui-monospace, monospace;
 }
 
 * {

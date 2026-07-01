@@ -1,3 +1,4 @@
+import { canvasFontFamily } from "@/lib/fonts";
 import type { RulerSettings } from "../types";
 
 export function drawRulers(
@@ -27,7 +28,7 @@ export function drawRulers(
   ctx.strokeStyle = "rgba(20, 20, 20, 0.85)";
   ctx.fillStyle = "rgba(20, 20, 20, 0.90)";
   ctx.lineWidth = 1;
-  ctx.font = "10px Arial";
+  ctx.font = `10px ${canvasFontFamily}`;
   ctx.textBaseline = "top";
 
   for (let x = 0; x <= width; x += minorTick) {
@@ -91,7 +92,7 @@ export function drawRulers(
   ctx.stroke();
 
   ctx.fillStyle = "rgba(20, 20, 20, 0.85)";
-  ctx.font = "9px Arial";
+  ctx.font = `9px ${canvasFontFamily}`;
   ctx.fillText("cm", rulerSize - 18, rulerSize - 14);
 
   ctx.restore();
