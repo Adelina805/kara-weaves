@@ -32,25 +32,40 @@ export function FabricDesignerApp() {
   };
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl gap-5 lg:grid-cols-[370px_minmax(420px,1fr)]">
-      <FabricControls
-        design={design}
-        newStripe={newStripe}
-        dispatch={dispatch}
-        onAddVerticalStripe={() => addStripe("vertical")}
-        onAddHorizontalStripe={() => addStripe("horizontal")}
-        onRemoveStripe={removeStripe}
-        onRefresh={renderNow}
-        onDownload={handleDownload}
-      />
-      <FabricCanvas
-        canvasRef={canvasRef}
-        outputSize={design.outputSize}
-        isDragging={isDragging}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-      />
+    <div className="flex h-full w-full">
+      <aside className="flex w-[min(100%,370px)] shrink-0 flex-col border-r border-stone-200 bg-white shadow-sm">
+        <header className="shrink-0 border-b border-stone-200 px-4 py-4">
+          <h1 className="text-sm font-bold tracking-[0.12em] text-stone-900">
+            KARA WEAVES DESIGN WORKSPACE
+          </h1>
+          <p className="mt-2 text-xs leading-relaxed text-stone-500">
+            Configure weave patterns, colors, borders, and stripes. Drag stripes directly on the
+            preview to reposition them.
+          </p>
+        </header>
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <FabricControls
+            design={design}
+            newStripe={newStripe}
+            dispatch={dispatch}
+            onAddVerticalStripe={() => addStripe("vertical")}
+            onAddHorizontalStripe={() => addStripe("horizontal")}
+            onRemoveStripe={removeStripe}
+            onRefresh={renderNow}
+            onDownload={handleDownload}
+          />
+        </div>
+      </aside>
+      <div className="min-h-0 min-w-0 flex-1">
+        <FabricCanvas
+          canvasRef={canvasRef}
+          outputSize={design.outputSize}
+          isDragging={isDragging}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+        />
+      </div>
     </div>
   );
 }

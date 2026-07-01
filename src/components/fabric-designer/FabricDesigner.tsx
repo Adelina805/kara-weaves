@@ -4,7 +4,6 @@ import type { RefObject } from "react";
 import type { FabricDesign, NewStripeDraft } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Button } from "@/components/ui/Button";
-import { Panel } from "@/components/ui/Section";
 import { BorderControls } from "./controls/BorderControls";
 import {
   BodyColorControls,
@@ -40,11 +39,10 @@ export function FabricControls({
   onDownload,
 }: FabricControlsProps) {
   return (
-    <Panel
-      title="Fabric Controls"
-      subtitle="Texture amount, softness, and intersection darkness use standard internal defaults."
-      className="max-h-[78vh] overflow-y-auto"
-    >
+    <div className="p-4">
+      <p className="mb-4 text-xs text-stone-500">
+        Texture amount, softness, and intersection darkness use standard internal defaults.
+      </p>
       <PatternTypeSelect weaveType={design.weaveType} dispatch={dispatch} />
       <BodyColorControls body={design.body} dispatch={dispatch} />
       <BorderControls borders={design.borders} dispatch={dispatch} />
@@ -75,7 +73,7 @@ export function FabricControls({
       <Button fullWidth variant="secondary" className="mt-2" onClick={onDownload}>
         Download PNG
       </Button>
-    </Panel>
+    </div>
   );
 }
 
@@ -97,23 +95,22 @@ export function FabricCanvas({
   onPointerUp,
 }: FabricCanvasProps) {
   return (
-    <Panel
-      title="Preview"
-      subtitle="Use Pattern Type to switch between plain, waffle, and loose weave."
-    >
-      <canvas
-        ref={canvasRef}
-        width={outputSize}
-        height={outputSize}
-        className={[
-          "mt-3 w-full max-w-[900px] rounded-xl border border-stone-200 bg-white touch-none",
-          isDragging ? "cursor-grabbing" : "cursor-grab",
-        ].join(" ")}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerLeave={onPointerUp}
-      />
-    </Panel>
+    <div className="flex h-full min-h-0 flex-col bg-stone-100">
+      <div className="flex min-h-0 flex-1 items-center justify-center p-6">
+        <canvas
+          ref={canvasRef}
+          width={outputSize}
+          height={outputSize}
+          className={[
+            "max-h-full max-w-full rounded-xl border border-stone-200 bg-white shadow-sm touch-none",
+            isDragging ? "cursor-grabbing" : "cursor-grab",
+          ].join(" ")}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerLeave={onPointerUp}
+        />
+      </div>
+    </div>
   );
 }

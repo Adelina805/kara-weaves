@@ -4,7 +4,7 @@ import karaWeavesLogo from "./kara-weaves-logo.png";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kara Weaves — Fabric Pattern Designer",
+  title: "Kara Weaves Design Workspace",
   description: "Design custom woven fabric patterns with plain, waffle, and loose weaves.",
   icons: {
     icon: karaWeavesLogo.src,
