@@ -21,15 +21,6 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
     warpColor: "#e8e4d8",
     weftColor: "#f7f5ee",
   },
-  borders: {
-    enabled: false,
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    warpColor: "#c8322d",
-    weftColor: "#c8322d",
-  },
   stripes: [],
   weave: {
     warpThickness: 3,

@@ -61,8 +61,6 @@ export function renderFabric(
 
   const bodyWarp = hexToRgb(design.body.warpColor);
   const bodyWeft = hexToRgb(design.body.weftColor);
-  const borderWarp = hexToRgb(design.borders.warpColor);
-  const borderWeft = hexToRgb(design.borders.weftColor);
 
   ctx.clearRect(0, 0, width, height);
 
@@ -71,50 +69,6 @@ export function renderFabric(
 
   const bodyPattern = createPatternForColors(ctx, design, bodyWarp, bodyWeft, textureAmount);
   fillPatternRect(ctx, bodyPattern, { x: 0, y: 0, w: width, h: height });
-
-  if (design.borders.enabled) {
-    const { top, bottom, left, right } = design.borders;
-
-    const verticalBorderPattern = createPatternForColors(
-      ctx,
-      design,
-      borderWarp,
-      bodyWeft,
-      textureAmount,
-    );
-
-    const horizontalBorderPattern = createPatternForColors(
-      ctx,
-      design,
-      bodyWarp,
-      borderWeft,
-      textureAmount,
-    );
-
-    if (left > 0) {
-      const rect = { x: 0, y: 0, w: left, h: height };
-      fillPatternRect(ctx, verticalBorderPattern, rect);
-      verticalBands.push({ rect, vertical: borderWarp, horizontal: bodyWeft });
-    }
-
-    if (right > 0) {
-      const rect = { x: width - right, y: 0, w: right, h: height };
-      fillPatternRect(ctx, verticalBorderPattern, rect);
-      verticalBands.push({ rect, vertical: borderWarp, horizontal: bodyWeft });
-    }
-
-    if (top > 0) {
-      const rect = { x: 0, y: 0, w: width, h: top };
-      fillPatternRect(ctx, horizontalBorderPattern, rect);
-      horizontalBands.push({ rect, vertical: bodyWarp, horizontal: borderWeft });
-    }
-
-    if (bottom > 0) {
-      const rect = { x: 0, y: height - bottom, w: width, h: bottom };
-      fillPatternRect(ctx, horizontalBorderPattern, rect);
-      horizontalBands.push({ rect, vertical: bodyWarp, horizontal: borderWeft });
-    }
-  }
 
   for (const stripe of design.stripes) {
     const stripeWarp = hexToRgb(stripe.warpColor);

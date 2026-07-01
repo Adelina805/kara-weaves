@@ -32,16 +32,6 @@ export type Stripe = {
   weftColor: string;
 };
 
-export type BorderConfig = {
-  enabled: boolean;
-  top: number;
-  bottom: number;
-  left: number;
-  right: number;
-  warpColor: string;
-  weftColor: string;
-};
-
 export type LooseWeaveParams = {
   openness: number;
   irregularity: number;
@@ -72,7 +62,6 @@ export type FabricDesign = {
     warpColor: string;
     weftColor: string;
   };
-  borders: BorderConfig;
   stripes: Stripe[];
   weave: WeaveSettings;
   rulers: RulerSettings;

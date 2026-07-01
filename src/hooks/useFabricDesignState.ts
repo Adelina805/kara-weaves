@@ -17,13 +17,6 @@ type FabricDesignAction =
   | { type: "SET_OUTPUT_SIZE"; outputSize: OutputSize }
   | { type: "SET_BODY_WARP_COLOR"; color: string }
   | { type: "SET_BODY_WEFT_COLOR"; color: string }
-  | { type: "SET_BORDERS_ENABLED"; enabled: boolean }
-  | { type: "SET_BORDER_WARP_COLOR"; color: string }
-  | { type: "SET_BORDER_WEFT_COLOR"; color: string }
-  | { type: "SET_BORDER_TOP"; value: number }
-  | { type: "SET_BORDER_BOTTOM"; value: number }
-  | { type: "SET_BORDER_LEFT"; value: number }
-  | { type: "SET_BORDER_RIGHT"; value: number }
   | { type: "SET_WARP_THICKNESS"; value: number }
   | { type: "SET_WEFT_THICKNESS"; value: number }
   | { type: "SET_LOOSE_OPENNESS"; value: number }
@@ -63,62 +56,6 @@ function fabricDesignReducer(
       return {
         ...state,
         design: { ...state.design, body: { ...state.design.body, weftColor: action.color } },
-      };
-    case "SET_BORDERS_ENABLED":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, enabled: action.enabled },
-        },
-      };
-    case "SET_BORDER_WARP_COLOR":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, warpColor: action.color },
-        },
-      };
-    case "SET_BORDER_WEFT_COLOR":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, weftColor: action.color },
-        },
-      };
-    case "SET_BORDER_TOP":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, top: action.value },
-        },
-      };
-    case "SET_BORDER_BOTTOM":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, bottom: action.value },
-        },
-      };
-    case "SET_BORDER_LEFT":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, left: action.value },
-        },
-      };
-    case "SET_BORDER_RIGHT":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          borders: { ...state.design.borders, right: action.value },
-        },
       };
     case "SET_WARP_THICKNESS":
       return {

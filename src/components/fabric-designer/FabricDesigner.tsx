@@ -4,7 +4,6 @@ import type { RefObject } from "react";
 import type { FabricDesign, NewStripeDraft } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Button } from "@/components/ui/Button";
-import { BorderControls } from "./controls/BorderControls";
 import {
   BodyColorControls,
   PatternTypeSelect,
@@ -45,7 +44,6 @@ export function FabricControls({
       </p>
       <PatternTypeSelect weaveType={design.weaveType} dispatch={dispatch} />
       <BodyColorControls body={design.body} dispatch={dispatch} />
-      <BorderControls borders={design.borders} dispatch={dispatch} />
       <StripeControls
         stripes={design.stripes}
         newStripe={newStripe}

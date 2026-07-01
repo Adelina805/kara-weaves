@@ -14,7 +14,6 @@ export { fillPatternRect } from "./render/fill-pattern";
 export { renderFabric } from "./render/render-fabric";
 export { findStripeAtPoint } from "./stripes/hit-test";
 export type {
-  BorderConfig,
   ColorBand,
   FabricDesign,
   LooseWeaveParams,

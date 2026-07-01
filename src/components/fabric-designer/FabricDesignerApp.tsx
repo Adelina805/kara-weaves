@@ -39,7 +39,7 @@ export function FabricDesignerApp() {
             KARA WEAVES DESIGN WORKSPACE
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-stone-500">
-            Configure weave patterns, colors, borders, and stripes. Drag stripes directly on the
+            Configure weave patterns, colors, and stripes. Drag stripes directly on the
             preview to reposition them.
           </p>
         </header>
