@@ -34,8 +34,8 @@ export function FabricDesignerApp() {
   const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
 
   return (
-    <div className="flex h-full w-full">
-      <aside className="flex w-[min(100%,370px)] shrink-0 flex-col border-r border-stone-200 bg-white shadow-sm">
+    <div className="flex h-full w-full flex-col md:flex-row">
+      <aside className="flex w-full shrink-0 flex-col border-b border-stone-200 bg-white shadow-sm md:w-[370px] md:border-b-0 md:border-r">
         <header className="shrink-0 border-b border-stone-200 px-4 py-4">
           <h1 className="text-sm font-bold tracking-[0.12em] text-stone-900">
             KARA WEAVES DESIGN WORKSPACE
@@ -58,7 +58,7 @@ export function FabricDesignerApp() {
           />
         </div>
       </aside>
-      <div className="min-h-0 min-w-0 flex-1">
+      <div className="min-h-[50vh] min-w-0 flex-1 md:min-h-0">
         <FabricCanvas
           canvasRef={canvasRef}
           canvasWidth={canvasWidth}
