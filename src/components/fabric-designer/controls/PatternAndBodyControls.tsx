@@ -4,7 +4,7 @@ import {
   type TextilePresetId,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
-import { Field, Select } from "@/components/ui/Field";
+import { ColorInput, Field, Select } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 
 type FabricSizeSelectProps = {
@@ -43,27 +43,35 @@ type BodyColorControlsProps = {
 
 export function BodyColorControls({ body, dispatch }: BodyColorControlsProps) {
   return (
-    <Section title="Body">
-      <Field label="Body vertical / warp color">
-        <input
-          type="color"
-          className="h-10 w-full cursor-pointer rounded-lg border border-stone-300 bg-transparent p-1"
+    <Section title="Body Color">
+      <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5">
+        <label
+          htmlFor="body-warp-color"
+          className="text-sm font-semibold text-stone-800"
+        >
+          Warp Color (Vertical)
+        </label>
+        <label
+          htmlFor="body-weft-color"
+          className="text-sm font-semibold text-stone-800"
+        >
+          Weft Color (Horizontal)
+        </label>
+        <ColorInput
+          id="body-warp-color"
           value={body.warpColor}
           onChange={(event) =>
             dispatch({ type: "SET_BODY_WARP_COLOR", color: event.target.value })
           }
         />
-      </Field>
-      <Field label="Body horizontal / weft color">
-        <input
-          type="color"
-          className="h-10 w-full cursor-pointer rounded-lg border border-stone-300 bg-transparent p-1"
+        <ColorInput
+          id="body-weft-color"
           value={body.weftColor}
           onChange={(event) =>
             dispatch({ type: "SET_BODY_WEFT_COLOR", color: event.target.value })
           }
         />
-      </Field>
+      </div>
     </Section>
   );
 }

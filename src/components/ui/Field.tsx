@@ -3,12 +3,13 @@ import type { InputHTMLAttributes, ReactNode } from "react";
 type FieldProps = {
   label: ReactNode;
   hint?: ReactNode;
+  className?: string;
   children: React.ReactNode;
 };
 
-export function Field({ label, hint, children }: FieldProps) {
+export function Field({ label, hint, className = "", children }: FieldProps) {
   return (
-    <label className="mt-3 block first:mt-0">
+    <label className={["mt-3 block first:mt-0", className].join(" ")}>
       <span className="text-sm font-semibold text-stone-800">{label}</span>
       <div className="mt-1.5">{children}</div>
       {hint ? <p className="mt-1 text-xs text-stone-500">{hint}</p> : null}
