@@ -1,7 +1,9 @@
 import {
+  FABRIC_PRESETS,
   TEXTILE_PRESET_OPTIONS,
   type FabricDesign,
   type TextilePresetId,
+  resolveTextilePreset,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { ColorInput, Field, Select } from "@/components/ui/Field";
@@ -11,6 +13,29 @@ type FabricSizeSelectProps = {
   design: FabricDesign;
   dispatch: FabricDesignDispatch;
 };
+
+const groupedTextilePresetOptions = FABRIC_PRESETS.map((fabric) => ({
+  label: fabric.label,
+  options: TEXTILE_PRESET_OPTIONS.map((option) => {
+    const preset = resolveTextilePreset(option.id);
+    return {
+      id: option.id,
+      fabricId: preset.fabricId,
+      sizeLabel: preset.sizeLabel,
+      sortArea: preset.canvasWidth * preset.canvasHeight,
+      sortWidth: preset.canvasWidth,
+      sortHeight: preset.canvasHeight,
+    };
+  })
+    .filter((option) => option.fabricId === fabric.id)
+    .sort(
+      (left, right) =>
+        left.sortArea - right.sortArea ||
+        left.sortWidth - right.sortWidth ||
+        left.sortHeight - right.sortHeight ||
+        left.sizeLabel.localeCompare(right.sizeLabel),
+    ),
+}));
 
 export function FabricSizeSelect({ design, dispatch }: FabricSizeSelectProps) {
   return (
@@ -25,10 +50,18 @@ export function FabricSizeSelect({ design, dispatch }: FabricSizeSelectProps) {
             })
           }
         >
-          {TEXTILE_PRESET_OPTIONS.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.label}
-            </option>
+          {groupedTextilePresetOptions.map((group) => (
+            <optgroup
+              key={group.label}
+              label={group.label}
+              className="font-semibold text-stone-900"
+            >
+              {group.options.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.sizeLabel}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </Select>
       </div>
