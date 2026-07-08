@@ -1,5 +1,6 @@
 import { darken, hexToRgb } from "../color";
 import { rectIntersection } from "../geometry";
+import { resolveTextilePreset } from "../textile-presets";
 import type {
   ColorBand,
   FabricDesign,
@@ -50,12 +51,12 @@ export function renderFabric(
     return;
   }
 
-  const size = design.outputSize;
-  canvas.width = size;
-  canvas.height = size;
+  const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
 
-  const width = size;
-  const height = size;
+  const width = canvasWidth;
+  const height = canvasHeight;
 
   const { textureAmount, softness, intersectionDarkness } = defaults;
 

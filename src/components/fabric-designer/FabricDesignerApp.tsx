@@ -1,6 +1,6 @@
 "use client";
 
-import { downloadFabricPng } from "@/lib/fabric";
+import { downloadFabricPng, resolveTextilePreset } from "@/lib/fabric";
 import { useFabricDesignState } from "@/hooks/useFabricDesignState";
 import { useFabricRenderer } from "@/hooks/useFabricRenderer";
 import { useStripeDrag } from "@/hooks/useStripeDrag";
@@ -31,6 +31,8 @@ export function FabricDesignerApp() {
     downloadFabricPng(canvas, design.weaveType);
   };
 
+  const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
+
   return (
     <div className="flex h-full w-full">
       <aside className="flex w-[min(100%,370px)] shrink-0 flex-col border-r border-stone-200 bg-white shadow-sm">
@@ -59,7 +61,8 @@ export function FabricDesignerApp() {
       <div className="min-h-0 min-w-0 flex-1">
         <FabricCanvas
           canvasRef={canvasRef}
-          outputSize={design.outputSize}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
           isDragging={isDragging}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}

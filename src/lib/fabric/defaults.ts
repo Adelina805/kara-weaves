@@ -1,3 +1,4 @@
+import { DEFAULT_TEXTILE_PRESET_ID } from "./textile-presets";
 import type { FabricDesign, NewStripeDraft, RenderDefaults } from "./types";
 
 export const RENDER_DEFAULTS: RenderDefaults = {
@@ -6,8 +7,6 @@ export const RENDER_DEFAULTS: RenderDefaults = {
   intersectionDarkness: 0.4,
 };
 
-export const OUTPUT_SIZE_OPTIONS = [512, 768, 1024, 1536] as const;
-
 export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
   width: 55,
   warpColor: "#d94893",
@@ -15,8 +14,8 @@ export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
 };
 
 export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
-  weaveType: "loose",
-  outputSize: 768,
+  weaveType: "plain",
+  textilePreset: DEFAULT_TEXTILE_PRESET_ID,
   body: {
     warpColor: "#e8e4d8",
     weftColor: "#f7f5ee",

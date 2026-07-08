@@ -1,28 +1,37 @@
-import { OUTPUT_SIZE_OPTIONS, type FabricDesign, type WeaveType } from "@/lib/fabric";
+import {
+  TEXTILE_PRESET_OPTIONS,
+  type FabricDesign,
+  type TextilePresetId,
+} from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Field, Select } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 
-type PatternTypeSelectProps = {
-  weaveType: WeaveType;
+type FabricSizeSelectProps = {
+  design: FabricDesign;
   dispatch: FabricDesignDispatch;
 };
 
-export function PatternTypeSelect({ weaveType, dispatch }: PatternTypeSelectProps) {
+export function FabricSizeSelect({ design, dispatch }: FabricSizeSelectProps) {
   return (
-    <Section title="Pattern Type">
-      <Field label="Choose weave pattern">
+    <Section title="Fabric & Size">
+      <div className="mt-3">
         <Select
-          value={weaveType}
+          value={design.textilePreset}
           onChange={(event) =>
-            dispatch({ type: "SET_WEAVE_TYPE", weaveType: event.target.value as WeaveType })
+            dispatch({
+              type: "SET_TEXTILE_PRESET",
+              textilePreset: event.target.value as TextilePresetId,
+            })
           }
         >
-          <option value="plain">Plain weave</option>
-          <option value="waffle">Waffle weave</option>
-          <option value="loose">Loose weave / gauze weave</option>
+          {TEXTILE_PRESET_OPTIONS.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.label}
+            </option>
+          ))}
         </Select>
-      </Field>
+      </div>
     </Section>
   );
 }
@@ -67,23 +76,6 @@ type WeaveOutputControlsProps = {
 export function WeaveOutputControls({ design, dispatch }: WeaveOutputControlsProps) {
   return (
     <Section title="Weave / Output">
-      <Field label="Output size">
-        <Select
-          value={design.outputSize}
-          onChange={(event) =>
-            dispatch({
-              type: "SET_OUTPUT_SIZE",
-              outputSize: Number(event.target.value) as FabricDesign["outputSize"],
-            })
-          }
-        >
-          {OUTPUT_SIZE_OPTIONS.map((size) => (
-            <option key={size} value={size}>
-              {size} × {size}
-            </option>
-          ))}
-        </Select>
-      </Field>
       <Field label="Vertical weave thickness / warp thickness">
         <input
           type="range"

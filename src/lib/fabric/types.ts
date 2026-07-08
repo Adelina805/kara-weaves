@@ -1,6 +1,10 @@
-export type WeaveType = "plain" | "waffle" | "loose";
+export type WeaveType = "plain" | "waffle" | "loose" | "thorthu" | "dobb";
 
-export type OutputSize = 512 | 768 | 1024 | 1536;
+export type FabricPresetId = "plain" | "loose" | "waffle" | "thorthu" | "dobb";
+
+export type CanvasSizePresetId = "12x12" | "14x21" | "20x20" | "18x28" | "40x70";
+
+export type TextilePresetId = `${FabricPresetId}-${CanvasSizePresetId}`;
 
 export type StripeOrientation = "vertical" | "horizontal";
 
@@ -57,7 +61,7 @@ export type RulerSettings = {
 
 export type FabricDesign = {
   weaveType: WeaveType;
-  outputSize: OutputSize;
+  textilePreset: TextilePresetId;
   body: {
     warpColor: string;
     weftColor: string;

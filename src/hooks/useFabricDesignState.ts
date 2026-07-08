@@ -4,17 +4,16 @@ import { useCallback, useReducer } from "react";
 import {
   DEFAULT_FABRIC_DESIGN,
   DEFAULT_NEW_STRIPE,
+  resolveTextilePreset,
   type FabricDesign,
   type NewStripeDraft,
-  type OutputSize,
   type Stripe,
   type StripeOrientation,
-  type WeaveType,
+  type TextilePresetId,
 } from "@/lib/fabric";
 
 type FabricDesignAction =
-  | { type: "SET_WEAVE_TYPE"; weaveType: WeaveType }
-  | { type: "SET_OUTPUT_SIZE"; outputSize: OutputSize }
+  | { type: "SET_TEXTILE_PRESET"; textilePreset: TextilePresetId }
   | { type: "SET_BODY_WARP_COLOR"; color: string }
   | { type: "SET_BODY_WEFT_COLOR"; color: string }
   | { type: "SET_WARP_THICKNESS"; value: number }
@@ -43,10 +42,17 @@ function fabricDesignReducer(
   action: FabricDesignAction,
 ): { design: FabricDesign; newStripe: NewStripeDraft } {
   switch (action.type) {
-    case "SET_WEAVE_TYPE":
-      return { ...state, design: { ...state.design, weaveType: action.weaveType } };
-    case "SET_OUTPUT_SIZE":
-      return { ...state, design: { ...state.design, outputSize: action.outputSize } };
+    case "SET_TEXTILE_PRESET": {
+      const resolved = resolveTextilePreset(action.textilePreset);
+      return {
+        ...state,
+        design: {
+          ...state.design,
+          textilePreset: resolved.textilePreset,
+          weaveType: resolved.weaveType,
+        },
+      };
+    }
     case "SET_BODY_WARP_COLOR":
       return {
         ...state,
@@ -160,10 +166,13 @@ function fabricDesignReducer(
         newStripe: { ...state.newStripe, weftColor: action.color },
       };
     case "ADD_STRIPE": {
+      const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
       const stripe: Stripe = {
         id: createStripeId(),
         orientation: action.orientation,
-        position: Math.floor(state.design.outputSize * 0.35),
+        position: Math.floor(
+          (action.orientation === "vertical" ? canvasWidth : canvasHeight) * 0.35,
+        ),
         width: state.newStripe.width,
         warpColor: state.newStripe.warpColor,
         weftColor: state.newStripe.weftColor,

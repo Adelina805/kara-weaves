@@ -6,7 +6,7 @@ import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Button } from "@/components/ui/Button";
 import {
   BodyColorControls,
-  PatternTypeSelect,
+  FabricSizeSelect,
   WeaveOutputControls,
 } from "./controls/PatternAndBodyControls";
 import { StripeControls } from "./controls/StripeControls";
@@ -39,7 +39,7 @@ export function FabricControls({
 }: FabricControlsProps) {
   return (
     <div className="p-4">
-      <PatternTypeSelect weaveType={design.weaveType} dispatch={dispatch} />
+      <FabricSizeSelect design={design} dispatch={dispatch} />
       <BodyColorControls body={design.body} dispatch={dispatch} />
       <StripeControls
         stripes={design.stripes}
@@ -74,7 +74,8 @@ export function FabricControls({
 
 type FabricCanvasProps = {
   canvasRef: RefObject<HTMLCanvasElement | null>;
-  outputSize: number;
+  canvasWidth: number;
+  canvasHeight: number;
   isDragging: boolean;
   onPointerDown: (event: React.PointerEvent<HTMLCanvasElement>) => void;
   onPointerMove: (event: React.PointerEvent<HTMLCanvasElement>) => void;
@@ -83,7 +84,8 @@ type FabricCanvasProps = {
 
 export function FabricCanvas({
   canvasRef,
-  outputSize,
+  canvasWidth,
+  canvasHeight,
   isDragging,
   onPointerDown,
   onPointerMove,
@@ -94,8 +96,8 @@ export function FabricCanvas({
       <div className="flex min-h-0 flex-1 items-center justify-center p-6">
         <canvas
           ref={canvasRef}
-          width={outputSize}
-          height={outputSize}
+          width={canvasWidth}
+          height={canvasHeight}
           className={[
             "max-h-full max-w-full border border-stone-200 bg-white shadow-sm touch-none",
             isDragging ? "cursor-grabbing" : "cursor-grab",

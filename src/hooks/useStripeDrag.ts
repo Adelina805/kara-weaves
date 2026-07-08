@@ -5,6 +5,7 @@ import {
   clampStripePosition,
   findStripeAtPoint,
   getCanvasPointerPosition,
+  resolveTextilePreset,
   type FabricDesign,
   type Stripe,
 } from "@/lib/fabric";
@@ -48,16 +49,18 @@ export function useStripeDrag({ design, onMoveStripe }: UseStripeDragOptions) {
       }
 
       const pos = getCanvasPointerPosition(canvas, event.clientX, event.clientY);
-      const canvasSize = design.outputSize;
+      const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
+      const canvasSize = stripe.orientation === "vertical" ? canvasWidth : canvasHeight;
 
-      const nextPosition =
-        stripe.orientation === "vertical"
-          ? clampStripePosition(pos.x - dragOffsetRef.current, stripe.width, canvasSize)
-          : clampStripePosition(pos.y - dragOffsetRef.current, stripe.width, canvasSize);
+      const nextPosition = clampStripePosition(
+        (stripe.orientation === "vertical" ? pos.x : pos.y) - dragOffsetRef.current,
+        stripe.width,
+        canvasSize,
+      );
 
       onMoveStripe(stripe.id, nextPosition);
     },
-    [design.outputSize, design.stripes, draggingStripeId, onMoveStripe],
+    [design.stripes, design.textilePreset, draggingStripeId, onMoveStripe],
   );
 
   const handlePointerUp = useCallback((event: React.PointerEvent<HTMLCanvasElement>) => {
