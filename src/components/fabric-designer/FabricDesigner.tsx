@@ -23,7 +23,6 @@ type FabricControlsProps = {
   onAddVerticalStripe: () => void;
   onAddHorizontalStripe: () => void;
   onRemoveStripe: (id: string) => void;
-  onRefresh: () => void;
   onDownload: () => void;
 };
 
@@ -34,7 +33,6 @@ export function FabricControls({
   onAddVerticalStripe,
   onAddHorizontalStripe,
   onRemoveStripe,
-  onRefresh,
   onDownload,
 }: FabricControlsProps) {
   return (
@@ -62,9 +60,6 @@ export function FabricControls({
       />
       <RulerControls rulers={design.rulers} dispatch={dispatch} />
 
-      <Button fullWidth className="mt-4" onClick={onRefresh}>
-        Generate / Refresh
-      </Button>
       <Button fullWidth variant="secondary" className="mt-2" onClick={onDownload}>
         Download PNG
       </Button>

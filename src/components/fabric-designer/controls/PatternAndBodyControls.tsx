@@ -93,7 +93,7 @@ export function WeaveOutputControls({ design, dispatch }: WeaveOutputControlsPro
           onChange={(event) =>
             dispatch({ type: "SET_WARP_THICKNESS", value: Number(event.target.value) })
           }
-          className="w-full accent-blue-600"
+          className="w-full accent-black"
         />
       </Field>
       <Field label="Horizontal weave thickness / weft thickness">
@@ -105,7 +105,7 @@ export function WeaveOutputControls({ design, dispatch }: WeaveOutputControlsPro
           onChange={(event) =>
             dispatch({ type: "SET_WEFT_THICKNESS", value: Number(event.target.value) })
           }
-          className="w-full accent-blue-600"
+          className="w-full accent-black"
         />
       </Field>
     </Section>

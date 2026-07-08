@@ -22,10 +22,7 @@ export function StripeControls({
   onAddHorizontal,
   onRemoveStripe,
 }: StripeControlsProps) {
-  const stripeButtonClassName = [
-    "flex items-center justify-center gap-2 border border-stone-300 bg-white px-3 py-2 text-stone-900",
-    "hover:bg-stone-50 focus:border-blue-500 focus:ring-2 focus:ring-blue-200",
-  ].join(" ");
+  const stripeButtonClassName = "flex items-center justify-center gap-2";
 
   return (
     <Section title="ADD STRIPE">
@@ -53,15 +50,15 @@ export function StripeControls({
       <div className="mt-3 grid grid-cols-2 gap-3">
         <Button className={stripeButtonClassName} onClick={onAddVertical}>
           <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
-            <span className="h-4.5 w-1.5 bg-stone-900" />
+            <span className="h-4.5 w-1.5 bg-white" />
           </span>
-          <span className="text-stone-900">vertical</span>
+          <span>vertical</span>
         </Button>
         <Button className={stripeButtonClassName} onClick={onAddHorizontal}>
           <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
-            <span className="h-1.5 w-4.5 bg-stone-900" />
+            <span className="h-1.5 w-4.5 bg-white" />
           </span>
-          <span className="text-stone-900">horizontal</span>
+          <span>horizontal</span>
         </Button>
       </div>
       <p className="mt-2 text-xs text-stone-500">Drag stripes to reposition them on the fabric preview.</p>

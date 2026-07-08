@@ -72,7 +72,7 @@ export function RangeInput({
     >
       <input
         type="range"
-        className={["w-full accent-blue-600", className].join(" ")}
+        className={["w-full accent-black", className].join(" ")}
         {...props}
       />
       {valueLabel !== undefined ? (
@@ -99,7 +99,7 @@ export function Checkbox({ label, className = "", ...props }: CheckboxProps) {
     <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm font-semibold text-stone-800">
       <input
         type="checkbox"
-        className={["h-4 w-4 rounded border-stone-300 accent-blue-600", className].join(" ")}
+        className={["h-4 w-4 rounded border-stone-300 accent-black", className].join(" ")}
         {...props}
       />
       {label}

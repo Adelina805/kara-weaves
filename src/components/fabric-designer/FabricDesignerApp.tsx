@@ -21,7 +21,7 @@ export function FabricDesignerApp() {
     onMoveStripe: moveStripe,
   });
 
-  const { canvasRef, renderNow } = useFabricRenderer(design, isDragging);
+  const { canvasRef } = useFabricRenderer(design, isDragging);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
@@ -53,7 +53,6 @@ export function FabricDesignerApp() {
             onAddVerticalStripe={() => addStripe("vertical")}
             onAddHorizontalStripe={() => addStripe("horizontal")}
             onRemoveStripe={removeStripe}
-            onRefresh={renderNow}
             onDownload={handleDownload}
           />
         </div>

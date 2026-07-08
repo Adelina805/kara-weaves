@@ -107,7 +107,7 @@ export function RulerControls({ rulers, dispatch }: RulerControlsProps) {
       <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm font-semibold text-stone-800">
         <input
           type="checkbox"
-          className="h-4 w-4 rounded border-stone-300 accent-blue-600"
+          className="h-4 w-4 rounded border-stone-300 accent-black"
           checked={rulers.enabled}
           onChange={(event) =>
             dispatch({ type: "SET_RULERS_ENABLED", enabled: event.target.checked })
