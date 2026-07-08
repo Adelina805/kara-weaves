@@ -26,8 +26,7 @@ type FabricDesignAction =
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
   | { type: "SET_PIXELS_PER_CM"; value: number }
   | { type: "SET_NEW_STRIPE_WIDTH"; value: number }
-  | { type: "SET_NEW_STRIPE_WARP_COLOR"; color: string }
-  | { type: "SET_NEW_STRIPE_WEFT_COLOR"; color: string }
+  | { type: "SET_NEW_STRIPE_COLOR"; color: string }
   | { type: "ADD_STRIPE"; orientation: StripeOrientation }
   | { type: "REMOVE_STRIPE"; id: string }
   | { type: "MOVE_STRIPE"; id: string; position: number }
@@ -155,27 +154,23 @@ function fabricDesignReducer(
         ...state,
         newStripe: { ...state.newStripe, width: action.value },
       };
-    case "SET_NEW_STRIPE_WARP_COLOR":
+    case "SET_NEW_STRIPE_COLOR":
       return {
         ...state,
-        newStripe: { ...state.newStripe, warpColor: action.color },
-      };
-    case "SET_NEW_STRIPE_WEFT_COLOR":
-      return {
-        ...state,
-        newStripe: { ...state.newStripe, weftColor: action.color },
+        newStripe: { ...state.newStripe, color: action.color },
       };
     case "ADD_STRIPE": {
       const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
+      const isVertical = action.orientation === "vertical";
       const stripe: Stripe = {
         id: createStripeId(),
         orientation: action.orientation,
         position: Math.floor(
-          (action.orientation === "vertical" ? canvasWidth : canvasHeight) * 0.35,
+          (isVertical ? canvasWidth : canvasHeight) * 0.35,
         ),
         width: state.newStripe.width,
-        warpColor: state.newStripe.warpColor,
-        weftColor: state.newStripe.weftColor,
+        warpColor: isVertical ? state.newStripe.color : state.design.body.warpColor,
+        weftColor: isVertical ? state.design.body.weftColor : state.newStripe.color,
       };
       return {
         ...state,

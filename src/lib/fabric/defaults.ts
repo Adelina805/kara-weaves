@@ -9,8 +9,7 @@ export const RENDER_DEFAULTS: RenderDefaults = {
 
 export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
   width: 55,
-  warpColor: "#D573A0",
-  weftColor: "#2E2E2E",
+  color: "#D573A0",
 };
 
 export const DEFAULT_FABRIC_DESIGN: FabricDesign = {

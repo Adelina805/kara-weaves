@@ -35,19 +35,11 @@ export function StripeControls({
           }
         />
       </Field>
-      <Field label="New stripe vertical / warp color">
+      <Field label="Stripe color">
         <ColorInput
-          value={newStripe.warpColor}
+          value={newStripe.color}
           onChange={(event) =>
-            dispatch({ type: "SET_NEW_STRIPE_WARP_COLOR", color: event.target.value })
-          }
-        />
-      </Field>
-      <Field label="New stripe horizontal / weft color">
-        <ColorInput
-          value={newStripe.weftColor}
-          onChange={(event) =>
-            dispatch({ type: "SET_NEW_STRIPE_WEFT_COLOR", color: event.target.value })
+            dispatch({ type: "SET_NEW_STRIPE_COLOR", color: event.target.value })
           }
         />
       </Field>

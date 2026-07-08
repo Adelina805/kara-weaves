@@ -23,9 +23,11 @@ export function StripeList({ stripes, onRemove }: StripeListProps) {
           </p>
           <p>Position: {Math.round(stripe.position)} px</p>
           <p>Width: {Math.round(stripe.width)} px</p>
-          <p>
-            Warp: {stripe.warpColor} | Weft: {stripe.weftColor}
-          </p>
+          {stripe.orientation === "vertical" ? (
+            <p>Warp: {stripe.warpColor}</p>
+          ) : (
+            <p>Weft: {stripe.weftColor}</p>
+          )}
           <Button
             variant="danger"
             className="mt-2 px-2 py-1 text-xs"

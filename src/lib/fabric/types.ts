@@ -90,6 +90,5 @@ export type WeavePatternParams = {
 
 export type NewStripeDraft = {
   width: number;
-  warpColor: string;
-  weftColor: string;
+  color: string;
 };
