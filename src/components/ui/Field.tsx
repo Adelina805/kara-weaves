@@ -1,4 +1,5 @@
-import type { InputHTMLAttributes, ReactNode } from "react";
+import type { ChangeEvent, InputHTMLAttributes, ReactNode } from "react";
+import { PresetColorPicker } from "@/components/ui/PresetColorPicker";
 
 type FieldProps = {
   label: ReactNode;
@@ -32,17 +33,22 @@ export function Select({ className = "", ...props }: SelectProps) {
   );
 }
 
-type ColorInputProps = InputHTMLAttributes<HTMLInputElement>;
+type ColorInputProps = {
+  id?: string;
+  value: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+};
 
-export function ColorInput({ className = "", ...props }: ColorInputProps) {
+export function ColorInput({ id, value, onChange, className = "" }: ColorInputProps) {
   return (
-    <input
-      type="color"
-      className={[
-        "h-10 w-full cursor-pointer rounded-lg border border-stone-300 bg-transparent p-1",
-        className,
-      ].join(" ")}
-      {...props}
+    <PresetColorPicker
+      id={id}
+      value={value}
+      className={className}
+      onChange={(hex) =>
+        onChange?.({ target: { value: hex } } as ChangeEvent<HTMLInputElement>)
+      }
     />
   );
 }

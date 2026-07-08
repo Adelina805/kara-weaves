@@ -9,16 +9,16 @@ export const RENDER_DEFAULTS: RenderDefaults = {
 
 export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
   width: 55,
-  warpColor: "#d94893",
-  weftColor: "#f0a4cf",
+  warpColor: "#D573A0",
+  weftColor: "#2E2E2E",
 };
 
 export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   weaveType: "plain",
   textilePreset: DEFAULT_TEXTILE_PRESET_ID,
   body: {
-    warpColor: "#e8e4d8",
-    weftColor: "#f7f5ee",
+    warpColor: "#E3E0DB",
+    weftColor: "#E3E0DB",
   },
   stripes: [],
   weave: {

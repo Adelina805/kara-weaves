@@ -1,7 +1,7 @@
 import type { FabricDesign, NewStripeDraft } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Button } from "@/components/ui/Button";
-import { Field, RangeInput } from "@/components/ui/Field";
+import { ColorInput, Field, RangeInput } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 import { StripeList } from "./StripeList";
 
@@ -36,9 +36,7 @@ export function StripeControls({
         />
       </Field>
       <Field label="New stripe vertical / warp color">
-        <input
-          type="color"
-          className="h-10 w-full cursor-pointer rounded-lg border border-stone-300 bg-transparent p-1"
+        <ColorInput
           value={newStripe.warpColor}
           onChange={(event) =>
             dispatch({ type: "SET_NEW_STRIPE_WARP_COLOR", color: event.target.value })
@@ -46,9 +44,7 @@ export function StripeControls({
         />
       </Field>
       <Field label="New stripe horizontal / weft color">
-        <input
-          type="color"
-          className="h-10 w-full cursor-pointer rounded-lg border border-stone-300 bg-transparent p-1"
+        <ColorInput
           value={newStripe.weftColor}
           onChange={(event) =>
             dispatch({ type: "SET_NEW_STRIPE_WEFT_COLOR", color: event.target.value })
