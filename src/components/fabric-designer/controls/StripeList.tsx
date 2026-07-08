@@ -8,7 +8,7 @@ type StripeListProps = {
 
 export function StripeList({ stripes, onRemove }: StripeListProps) {
   if (stripes.length === 0) {
-    return <p className="mt-3 text-xs text-stone-500">No custom stripes yet.</p>;
+    return null;
   }
 
   return (

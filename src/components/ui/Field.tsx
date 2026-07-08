@@ -55,18 +55,34 @@ export function ColorInput({ id, value, onChange, className = "" }: ColorInputPr
 
 type RangeInputProps = InputHTMLAttributes<HTMLInputElement> & {
   valueLabel?: string | number;
+  valueLabelPosition?: "inline" | "below";
 };
 
-export function RangeInput({ valueLabel, className = "", ...props }: RangeInputProps) {
+export function RangeInput({
+  valueLabel,
+  valueLabelPosition = "inline",
+  className = "",
+  ...props
+}: RangeInputProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div
+      className={
+        valueLabelPosition === "below" ? "flex flex-col items-stretch gap-1" : "flex items-center gap-2"
+      }
+    >
       <input
         type="range"
         className={["w-full accent-blue-600", className].join(" ")}
         {...props}
       />
       {valueLabel !== undefined ? (
-        <span className="min-w-10 text-right text-xs tabular-nums text-stone-600">
+        <span
+          className={
+            valueLabelPosition === "below"
+              ? "text-center text-xs tabular-nums text-stone-600"
+              : "w-7 shrink-0 text-center text-xs tabular-nums text-stone-600"
+          }
+        >
           {valueLabel}
         </span>
       ) : null}

@@ -60,7 +60,7 @@ export function PresetColorPicker({
         <div
           role="listbox"
           aria-label="Preset colors"
-          className="absolute left-0 top-full z-50 mt-1 rounded-lg border border-stone-200 bg-white p-3 shadow-lg"
+          className="absolute left-0 top-full z-50 mt-1 min-w-44 rounded-lg border border-stone-200 bg-white p-3 shadow-lg"
         >
           <div className="grid grid-cols-4 gap-2">
             {COLOR_PRESETS.map((preset) => {
