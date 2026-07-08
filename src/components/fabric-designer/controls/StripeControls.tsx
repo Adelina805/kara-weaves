@@ -52,22 +52,16 @@ export function StripeControls({
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3">
         <Button className={stripeButtonClassName} onClick={onAddVertical}>
-          <span
-            aria-hidden="true"
-            className="flex h-5 w-5 items-center justify-center rounded border border-stone-300 bg-stone-50"
-          >
-            <span className="h-3.5 w-1.5 rounded-full bg-stone-900" />
+          <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
+            <span className="h-4.5 w-1.5 bg-stone-900" />
           </span>
-          <span>Vertical</span>
+          <span className="text-stone-900">vertical</span>
         </Button>
         <Button className={stripeButtonClassName} onClick={onAddHorizontal}>
-          <span
-            aria-hidden="true"
-            className="flex h-5 w-5 items-center justify-center rounded border border-stone-300 bg-stone-50"
-          >
-            <span className="h-1.5 w-3.5 rounded-full bg-stone-900" />
+          <span aria-hidden="true" className="flex h-5 w-5 items-center justify-center">
+            <span className="h-1.5 w-4.5 bg-stone-900" />
           </span>
-          <span>Horizontal</span>
+          <span className="text-stone-900">horizontal</span>
         </Button>
       </div>
       <p className="mt-2 text-xs text-stone-500">Drag stripes to reposition them on the fabric preview.</p>
