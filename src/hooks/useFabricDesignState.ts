@@ -24,7 +24,6 @@ type FabricDesignAction =
   | { type: "SET_WAFFLE_CELL_SCALE"; value: number }
   | { type: "SET_WAFFLE_DEPTH"; value: number }
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
-  | { type: "SET_PIXELS_PER_CM"; value: number }
   | { type: "SET_NEW_STRIPE_WIDTH"; value: number }
   | { type: "SET_NEW_STRIPE_COLOR"; color: string }
   | { type: "ADD_STRIPE"; orientation: StripeOrientation }
@@ -139,14 +138,6 @@ function fabricDesignReducer(
         design: {
           ...state.design,
           rulers: { ...state.design.rulers, enabled: action.enabled },
-        },
-      };
-    case "SET_PIXELS_PER_CM":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          rulers: { ...state.design.rulers, pixelsPerCm: action.value },
         },
       };
     case "SET_NEW_STRIPE_WIDTH":

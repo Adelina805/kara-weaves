@@ -10,7 +10,6 @@ import type {
 } from "../types";
 import { createWeavePattern } from "../weaves/create-weave-pattern";
 import { applyGlobalSoftness } from "./apply-softness";
-import { drawRulers } from "./draw-rulers";
 import { fillPatternRect } from "./fill-pattern";
 
 function buildWeaveParams(
@@ -131,5 +130,4 @@ export function renderFabric(
   }
 
   applyGlobalSoftness(ctx, width, height, softness * 0.7);
-  drawRulers(ctx, width, height, design.rulers);
 }

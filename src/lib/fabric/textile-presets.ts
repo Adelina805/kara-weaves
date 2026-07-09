@@ -16,7 +16,11 @@ export type CanvasSizePreset = {
   label: string;
   widthPx: number;
   heightPx: number;
+  widthInches: number;
+  heightInches: number;
 };
+
+export const INCHES_TO_CM = 2.54;
 
 export type TextilePresetOption = {
   id: TextilePresetId;
@@ -30,6 +34,8 @@ export type ResolvedTextilePreset = {
   weaveType: WeaveType;
   canvasWidth: number;
   canvasHeight: number;
+  widthInches: number;
+  heightInches: number;
   fabricLabel: string;
   sizeLabel: string;
 };
@@ -43,11 +49,11 @@ export const FABRIC_PRESETS: readonly FabricPreset[] = [
 ] as const;
 
 export const CANVAS_SIZE_PRESETS: readonly CanvasSizePreset[] = [
-  { id: "12x12", label: "12 × 12 in", widthPx: 512, heightPx: 512 },
-  { id: "14x21", label: "14 × 21 in", widthPx: 512, heightPx: 768 },
-  { id: "20x20", label: "20 × 20 in", widthPx: 768, heightPx: 768 },
-  { id: "18x28", label: "18 × 28 in", widthPx: 576, heightPx: 896 },
-  { id: "40x70", label: "40 × 70 in", widthPx: 878, heightPx: 1536 },
+  { id: "12x12", label: "12 × 12 in", widthPx: 512, heightPx: 512, widthInches: 12, heightInches: 12 },
+  { id: "14x21", label: "14 × 21 in", widthPx: 512, heightPx: 768, widthInches: 14, heightInches: 21 },
+  { id: "20x20", label: "20 × 20 in", widthPx: 768, heightPx: 768, widthInches: 20, heightInches: 20 },
+  { id: "18x28", label: "18 × 28 in", widthPx: 576, heightPx: 896, widthInches: 18, heightInches: 28 },
+  { id: "40x70", label: "40 × 70 in", widthPx: 878, heightPx: 1536, widthInches: 40, heightInches: 70 },
 ] as const;
 
 export const DEFAULT_TEXTILE_PRESET_ID: TextilePresetId = "plain-40x70";
@@ -96,9 +102,19 @@ export function resolveTextilePreset(textilePreset: TextilePresetId): ResolvedTe
     weaveType: fabric.weaveType,
     canvasWidth: size.widthPx,
     canvasHeight: size.heightPx,
+    widthInches: size.widthInches,
+    heightInches: size.heightInches,
     fabricLabel: fabric.label,
     sizeLabel: size.label,
   };
+}
+
+export function getTextilePixelsPerCm(resolved: ResolvedTextilePreset): number {
+  return resolved.canvasWidth / (resolved.widthInches * INCHES_TO_CM);
+}
+
+export function getTextilePixelsPerInch(resolved: ResolvedTextilePreset): number {
+  return resolved.canvasWidth / resolved.widthInches;
 }
 
 export function getTextilePresetId(

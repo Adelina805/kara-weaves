@@ -8,7 +8,11 @@ export {
 export { downloadFabricPng } from "./export/download-png";
 export { clampStripePosition, getCanvasPointerPosition, rectIntersection } from "./geometry";
 export { applyGlobalSoftness } from "./render/apply-softness";
-export { drawRulers } from "./render/draw-rulers";
+export {
+  drawHorizontalRuler,
+  drawRulerCorner,
+  drawVerticalRuler,
+} from "./render/draw-rulers";
 export { fillPatternRect } from "./render/fill-pattern";
 export { renderFabric } from "./render/render-fabric";
 export { findStripeAtPoint } from "./stripes/hit-test";
@@ -18,7 +22,10 @@ export {
   FABRIC_PRESETS,
   TEXTILE_PRESET_OPTIONS,
   buildTextilePresetId,
+  getTextilePixelsPerCm,
+  getTextilePixelsPerInch,
   getTextilePresetId,
+  INCHES_TO_CM,
   resolveTextilePreset,
 } from "./textile-presets";
 export type {
@@ -38,6 +45,7 @@ export type {
   RenderDefaults,
   RGB,
   RulerSettings,
+  RulerUnit,
   Stripe,
   StripeOrientation,
   TextilePresetId,

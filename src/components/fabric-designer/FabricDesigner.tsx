@@ -6,6 +6,7 @@ import { findStripeAtPoint, getCanvasPointerPosition } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { Button } from "@/components/ui/Button";
 import { CanvasZoomControls } from "./CanvasZoomControls";
+import { FabricRulers } from "./FabricRulers";
 import {
   BodyColorControls,
   FabricSizeSelect,
@@ -83,6 +84,8 @@ type FabricCanvasProps = {
   isDragging: boolean;
   isPanning: boolean;
   isSpacePressed: boolean;
+  rulersEnabled: boolean;
+  pixelsPerInch: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
@@ -109,6 +112,8 @@ export function FabricCanvas({
   isDragging,
   isPanning,
   isSpacePressed,
+  rulersEnabled,
+  pixelsPerInch,
   onZoomIn,
   onZoomOut,
   onResetZoom,
@@ -179,21 +184,29 @@ export function FabricCanvas({
           style={{
             left: panX,
             top: panY,
-            width: displayWidth,
-            height: displayHeight,
           }}
         >
-          <canvas
-            ref={canvasRef}
-            width={canvasWidth}
-            height={canvasHeight}
-            className={[
-              "h-full w-full border border-stone-200 bg-white shadow-sm touch-none",
-              cursorClass,
-            ].join(" ")}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-          />
+          <FabricRulers
+            enabled={rulersEnabled}
+            displayWidth={displayWidth}
+            displayHeight={displayHeight}
+            pixelsPerInch={pixelsPerInch}
+            fitScale={fitScale}
+            zoom={zoom}
+          >
+            <canvas
+              ref={canvasRef}
+              width={canvasWidth}
+              height={canvasHeight}
+              className={[
+                "border border-stone-200 bg-white shadow-sm touch-none",
+                cursorClass,
+              ].join(" ")}
+              style={{ width: displayWidth, height: displayHeight }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+            />
+          </FabricRulers>
         </div>
       </div>
       <CanvasZoomControls

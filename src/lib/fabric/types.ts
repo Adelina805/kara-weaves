@@ -54,9 +54,10 @@ export type WeaveSettings = {
   waffle: WaffleWeaveParams;
 };
 
+export type RulerUnit = "metric" | "imperial";
+
 export type RulerSettings = {
   enabled: boolean;
-  pixelsPerCm: number;
 };
 
 export type FabricDesign = {

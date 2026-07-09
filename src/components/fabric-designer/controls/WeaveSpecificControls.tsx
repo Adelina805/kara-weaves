@@ -103,7 +103,7 @@ type RulerControlsProps = {
 
 export function RulerControls({ rulers, dispatch }: RulerControlsProps) {
   return (
-    <Section title="Centimeter Rulers">
+    <Section title="Rulers">
       <label className="mt-3 flex cursor-pointer items-center gap-2 text-sm font-semibold text-stone-800">
         <input
           type="checkbox"
@@ -113,22 +113,8 @@ export function RulerControls({ rulers, dispatch }: RulerControlsProps) {
             dispatch({ type: "SET_RULERS_ENABLED", enabled: event.target.checked })
           }
         />
-        Show centimeter rulers
+        Show rulers
       </label>
-      <Field label="Pixels per centimeter">
-        <RangeInput
-          min={20}
-          max={100}
-          value={rulers.pixelsPerCm}
-          valueLabel={rulers.pixelsPerCm}
-          onChange={(event) =>
-            dispatch({ type: "SET_PIXELS_PER_CM", value: Number(event.target.value) })
-          }
-        />
-      </Field>
-      <p className="mt-2 text-xs text-stone-500">
-        Small ticks = 1 mm, medium ticks = 0.5 cm, numbered ticks = 1 cm.
-      </p>
     </Section>
   );
 }

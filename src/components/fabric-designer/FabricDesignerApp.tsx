@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { downloadFabricPng, resolveTextilePreset } from "@/lib/fabric";
+import { downloadFabricPng, getTextilePixelsPerInch, resolveTextilePreset } from "@/lib/fabric";
 import { useCanvasViewport } from "@/hooks/useCanvasViewport";
 import { useFabricDesignState } from "@/hooks/useFabricDesignState";
 import { useFabricRenderer } from "@/hooks/useFabricRenderer";
@@ -18,7 +18,9 @@ export function FabricDesignerApp() {
     moveStripe,
   } = useFabricDesignState();
 
-  const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
+  const textilePreset = resolveTextilePreset(design.textilePreset);
+  const { canvasWidth, canvasHeight } = textilePreset;
+  const pixelsPerInch = getTextilePixelsPerInch(textilePreset);
 
   const {
     containerRef,
@@ -70,8 +72,7 @@ export function FabricDesignerApp() {
             KARA WEAVES DESIGN WORKSPACE
           </h1>
           <p className="mt-2 text-xs leading-relaxed text-stone-500">
-            Configure weave patterns, colors, and stripes. Drag stripes directly on the
-            preview to reposition them.
+            Custom woven textiles with real production constraints.
           </p>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto">
@@ -101,6 +102,8 @@ export function FabricDesignerApp() {
           isDragging={isDragging}
           isPanning={isPanning}
           isSpacePressed={isSpacePressed}
+          rulersEnabled={design.rulers.enabled}
+          pixelsPerInch={pixelsPerInch}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetZoom={resetZoom}

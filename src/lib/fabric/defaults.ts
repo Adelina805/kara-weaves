@@ -35,7 +35,6 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   },
   rulers: {
     enabled: false,
-    pixelsPerCm: 40,
   },
 };
 
