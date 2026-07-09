@@ -205,37 +205,38 @@ export function FabricCanvas({
             top: panY,
           }}
         >
-          <FabricRulers
-            enabled={rulersEnabled}
-            displayWidth={displayWidth}
-            displayHeight={displayHeight}
-            pixelsPerInch={pixelsPerInch}
-            fitScale={fitScale}
-            zoom={zoom}
-          >
-            <div className="relative">
-              <canvas
-                ref={canvasRef}
-                width={canvasWidth}
-                height={canvasHeight}
-                className={[
-                  "border border-stone-200 bg-white shadow-sm touch-none",
-                  cursorClass,
-                ].join(" ")}
-                style={{ width: displayWidth, height: displayHeight }}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerLeave}
-              />
-              <StripeBrushPreview
-                activeStripeBrush={activeStripeBrush}
-                hoverPosition={hoverPosition}
-                canvasWidth={canvasWidth}
-                canvasHeight={canvasHeight}
-              />
-            </div>
-          </FabricRulers>
+          <div className="relative">
+            <canvas
+              ref={canvasRef}
+              width={canvasWidth}
+              height={canvasHeight}
+              className={[
+                "border border-stone-200 bg-white shadow-sm touch-none",
+                cursorClass,
+              ].join(" ")}
+              style={{ width: displayWidth, height: displayHeight }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerLeave}
+            />
+            <StripeBrushPreview
+              activeStripeBrush={activeStripeBrush}
+              hoverPosition={hoverPosition}
+              canvasWidth={canvasWidth}
+              canvasHeight={canvasHeight}
+            />
+          </div>
         </div>
+        <FabricRulers
+          enabled={rulersEnabled}
+          panX={panX}
+          panY={panY}
+          displayWidth={displayWidth}
+          displayHeight={displayHeight}
+          pixelsPerInch={pixelsPerInch}
+          fitScale={fitScale}
+          zoom={zoom}
+        />
         <CanvasToolbar
           zoomPercent={zoomPercent}
           onZoomIn={onZoomIn}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { RULER_OFFSET } from "@/components/fabric-designer/FabricRulers";
 
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
@@ -174,8 +175,8 @@ export function useCanvasViewport({ canvasWidth, canvasHeight }: UseCanvasViewpo
       const style = getComputedStyle(container);
       const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
       const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
-      const availableWidth = width - padX;
-      const availableHeight = height - padY;
+      const availableWidth = Math.max(0, width - padX - RULER_OFFSET);
+      const availableHeight = Math.max(0, height - padY - RULER_OFFSET);
       const scaleX = availableWidth / canvasWidth;
       const scaleY = availableHeight / canvasHeight;
 

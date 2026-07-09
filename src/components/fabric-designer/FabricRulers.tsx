@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef } from "react";
 import {
   drawHorizontalRuler,
   drawRulerCorner,
@@ -10,16 +10,18 @@ import {
 
 export const RULER_CHROME_SIZE = 28;
 export const RULER_GAP = 4;
+export const RULER_OFFSET = RULER_CHROME_SIZE + RULER_GAP;
 
 type FabricRulersProps = {
   enabled: boolean;
+  panX: number;
+  panY: number;
   displayWidth: number;
   displayHeight: number;
   pixelsPerInch: number;
   fitScale: number;
   zoom: number;
   unit?: RulerUnit;
-  children: ReactNode;
 };
 
 function setupCanvas(
@@ -44,13 +46,14 @@ function setupCanvas(
 
 export function FabricRulers({
   enabled,
+  panX,
+  panY,
   displayWidth,
   displayHeight,
   pixelsPerInch,
   fitScale,
   zoom,
   unit = "imperial",
-  children,
 }: FabricRulersProps) {
   const cornerRef = useRef<HTMLCanvasElement>(null);
   const topRef = useRef<HTMLCanvasElement>(null);
@@ -85,36 +88,41 @@ export function FabricRulers({
   }, [displayHeight, displayPixelsPerUnit, displayWidth, enabled, unit]);
 
   if (!enabled) {
-    return <>{children}</>;
+    return null;
   }
 
   return (
-    <div className="inline-flex flex-col">
-      <div className="flex" style={{ marginBottom: RULER_GAP }}>
-        <canvas
-          ref={cornerRef}
-          className="shrink-0"
-          style={{ width: RULER_CHROME_SIZE, height: RULER_CHROME_SIZE }}
-          aria-hidden
-        />
-        <div className="shrink-0" style={{ width: RULER_GAP }} />
-        <canvas
-          ref={topRef}
-          className="shrink-0"
-          style={{ width: displayWidth, height: RULER_CHROME_SIZE }}
-          aria-hidden
-        />
-      </div>
-      <div className="flex">
-        <canvas
-          ref={leftRef}
-          className="shrink-0"
-          style={{ width: RULER_CHROME_SIZE, height: displayHeight }}
-          aria-hidden
-        />
-        <div className="shrink-0" style={{ width: RULER_GAP }} />
-        {children}
-      </div>
+    <div className="pointer-events-none absolute inset-0" aria-hidden>
+      <canvas
+        ref={cornerRef}
+        className="absolute"
+        style={{
+          left: panX - RULER_OFFSET,
+          top: panY - RULER_OFFSET,
+          width: RULER_CHROME_SIZE,
+          height: RULER_CHROME_SIZE,
+        }}
+      />
+      <canvas
+        ref={topRef}
+        className="absolute"
+        style={{
+          left: panX,
+          top: panY - RULER_OFFSET,
+          width: displayWidth,
+          height: RULER_CHROME_SIZE,
+        }}
+      />
+      <canvas
+        ref={leftRef}
+        className="absolute"
+        style={{
+          left: panX - RULER_OFFSET,
+          top: panY,
+          width: RULER_CHROME_SIZE,
+          height: displayHeight,
+        }}
+      />
     </div>
   );
 }
