@@ -2,11 +2,11 @@
 
 import { useCallback, useReducer } from "react";
 import {
+  DEFAULT_ACTIVE_STRIPE_BRUSH,
   DEFAULT_FABRIC_DESIGN,
-  DEFAULT_NEW_STRIPE,
   resolveTextilePreset,
+  type ActiveStripeBrush,
   type FabricDesign,
-  type NewStripeDraft,
   type Stripe,
   type StripeOrientation,
   type TextilePresetId,
@@ -24,9 +24,10 @@ type FabricDesignAction =
   | { type: "SET_WAFFLE_CELL_SCALE"; value: number }
   | { type: "SET_WAFFLE_DEPTH"; value: number }
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
-  | { type: "SET_NEW_STRIPE_WIDTH"; value: number }
-  | { type: "SET_NEW_STRIPE_COLOR"; color: string }
-  | { type: "ADD_STRIPE"; orientation: StripeOrientation }
+  | { type: "SET_ACTIVE_STRIPE_WIDTH"; value: number }
+  | { type: "SET_ACTIVE_STRIPE_COLOR"; color: string }
+  | { type: "SET_ACTIVE_STRIPE_ORIENTATION"; orientation: StripeOrientation | null }
+  | { type: "PLACE_STRIPE"; position: number }
   | { type: "REMOVE_STRIPE"; id: string }
   | { type: "MOVE_STRIPE"; id: string; position: number }
   | { type: "RESET_DESIGN" };
@@ -36,9 +37,9 @@ function createStripeId(): string {
 }
 
 function fabricDesignReducer(
-  state: { design: FabricDesign; newStripe: NewStripeDraft },
+  state: { design: FabricDesign; activeStripeBrush: ActiveStripeBrush },
   action: FabricDesignAction,
-): { design: FabricDesign; newStripe: NewStripeDraft } {
+): { design: FabricDesign; activeStripeBrush: ActiveStripeBrush } {
   switch (action.type) {
     case "SET_TEXTILE_PRESET": {
       const resolved = resolveTextilePreset(action.textilePreset);
@@ -140,28 +141,34 @@ function fabricDesignReducer(
           rulers: { ...state.design.rulers, enabled: action.enabled },
         },
       };
-    case "SET_NEW_STRIPE_WIDTH":
+    case "SET_ACTIVE_STRIPE_WIDTH":
       return {
         ...state,
-        newStripe: { ...state.newStripe, width: action.value },
+        activeStripeBrush: { ...state.activeStripeBrush, width: action.value },
       };
-    case "SET_NEW_STRIPE_COLOR":
+    case "SET_ACTIVE_STRIPE_COLOR":
       return {
         ...state,
-        newStripe: { ...state.newStripe, color: action.color },
+        activeStripeBrush: { ...state.activeStripeBrush, color: action.color },
       };
-    case "ADD_STRIPE": {
-      const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
-      const isVertical = action.orientation === "vertical";
+    case "SET_ACTIVE_STRIPE_ORIENTATION":
+      return {
+        ...state,
+        activeStripeBrush: { ...state.activeStripeBrush, orientation: action.orientation },
+      };
+    case "PLACE_STRIPE": {
+      const { orientation, width, color } = state.activeStripeBrush;
+      if (orientation === null) {
+        return state;
+      }
+      const isVertical = orientation === "vertical";
       const stripe: Stripe = {
         id: createStripeId(),
-        orientation: action.orientation,
-        position: Math.floor(
-          (isVertical ? canvasWidth : canvasHeight) * 0.35,
-        ),
-        width: state.newStripe.width,
-        warpColor: isVertical ? state.newStripe.color : state.design.body.warpColor,
-        weftColor: isVertical ? state.design.body.weftColor : state.newStripe.color,
+        orientation,
+        position: action.position,
+        width,
+        warpColor: isVertical ? color : state.design.body.warpColor,
+        weftColor: isVertical ? state.design.body.weftColor : color,
       };
       return {
         ...state,
@@ -192,7 +199,7 @@ function fabricDesignReducer(
     case "RESET_DESIGN":
       return {
         design: DEFAULT_FABRIC_DESIGN,
-        newStripe: DEFAULT_NEW_STRIPE,
+        activeStripeBrush: DEFAULT_ACTIVE_STRIPE_BRUSH,
       };
     default:
       return state;
@@ -201,14 +208,14 @@ function fabricDesignReducer(
 
 const initialState = {
   design: DEFAULT_FABRIC_DESIGN,
-  newStripe: DEFAULT_NEW_STRIPE,
+  activeStripeBrush: DEFAULT_ACTIVE_STRIPE_BRUSH,
 };
 
 export function useFabricDesignState() {
   const [state, dispatch] = useReducer(fabricDesignReducer, initialState);
 
-  const addStripe = useCallback((orientation: StripeOrientation) => {
-    dispatch({ type: "ADD_STRIPE", orientation });
+  const placeStripe = useCallback((position: number) => {
+    dispatch({ type: "PLACE_STRIPE", position });
   }, []);
 
   const removeStripe = useCallback((id: string) => {
@@ -221,9 +228,9 @@ export function useFabricDesignState() {
 
   return {
     design: state.design,
-    newStripe: state.newStripe,
+    activeStripeBrush: state.activeStripeBrush,
     dispatch,
-    addStripe,
+    placeStripe,
     removeStripe,
     moveStripe,
   };

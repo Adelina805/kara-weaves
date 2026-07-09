@@ -1,5 +1,5 @@
 import { DEFAULT_TEXTILE_PRESET_ID } from "./textile-presets";
-import type { FabricDesign, NewStripeDraft, RenderDefaults } from "./types";
+import type { ActiveStripeBrush, FabricDesign, RenderDefaults } from "./types";
 
 export const RENDER_DEFAULTS: RenderDefaults = {
   textureAmount: 0.85,
@@ -7,7 +7,8 @@ export const RENDER_DEFAULTS: RenderDefaults = {
   intersectionDarkness: 0.4,
 };
 
-export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
+export const DEFAULT_ACTIVE_STRIPE_BRUSH: ActiveStripeBrush = {
+  orientation: "horizontal",
   width: 55,
   color: "#D573A0",
 };

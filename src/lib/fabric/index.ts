@@ -1,12 +1,17 @@
 export { hexToRgb, rgbToString, clamp, mix, darken, lighten, adjustColor } from "./color";
 export {
   DEFAULT_FABRIC_DESIGN,
-  DEFAULT_NEW_STRIPE,
+  DEFAULT_ACTIVE_STRIPE_BRUSH,
   RENDER_DEBOUNCE_MS,
   RENDER_DEFAULTS,
 } from "./defaults";
 export { downloadFabricPng } from "./export/download-png";
-export { clampStripePosition, getCanvasPointerPosition, rectIntersection } from "./geometry";
+export {
+  clampStripePosition,
+  computeCenteredStripePosition,
+  getCanvasPointerPosition,
+  rectIntersection,
+} from "./geometry";
 export { applyGlobalSoftness } from "./render/apply-softness";
 export {
   drawHorizontalRuler,
@@ -40,7 +45,7 @@ export type {
   FabricDesign,
   FabricPresetId,
   LooseWeaveParams,
-  NewStripeDraft,
+  ActiveStripeBrush,
   Rect,
   RenderDefaults,
   RGB,

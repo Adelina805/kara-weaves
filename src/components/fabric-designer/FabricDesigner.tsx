@@ -1,11 +1,12 @@
 "use client";
 
 import type { RefObject } from "react";
-import type { FabricDesign, NewStripeDraft, Stripe } from "@/lib/fabric";
+import type { ActiveStripeBrush, FabricDesign, Stripe } from "@/lib/fabric";
 import { findStripeAtPoint, getCanvasPointerPosition } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { CanvasToolbar } from "./CanvasToolbar";
 import { FabricRulers } from "./FabricRulers";
+import { StripeBrushPreview } from "./StripeBrushPreview";
 import {
   BodyColorControls,
   FabricSizeSelect,
@@ -19,19 +20,15 @@ import {
 
 type FabricControlsProps = {
   design: FabricDesign;
-  newStripe: NewStripeDraft;
+  activeStripeBrush: ActiveStripeBrush;
   dispatch: FabricDesignDispatch;
-  onAddVerticalStripe: () => void;
-  onAddHorizontalStripe: () => void;
   onRemoveStripe: (id: string) => void;
 };
 
 export function FabricControls({
   design,
-  newStripe,
+  activeStripeBrush,
   dispatch,
-  onAddVerticalStripe,
-  onAddHorizontalStripe,
   onRemoveStripe,
 }: FabricControlsProps) {
   return (
@@ -40,10 +37,8 @@ export function FabricControls({
       <BodyColorControls body={design.body} dispatch={dispatch} />
       <StripeControls
         stripes={design.stripes}
-        newStripe={newStripe}
+        activeStripeBrush={activeStripeBrush}
         dispatch={dispatch}
-        onAddVertical={onAddVerticalStripe}
-        onAddHorizontal={onAddHorizontalStripe}
         onRemoveStripe={onRemoveStripe}
       />
       <WeaveOutputControls design={design} dispatch={dispatch} />
@@ -67,6 +62,8 @@ type FabricCanvasProps = {
   canvasWidth: number;
   canvasHeight: number;
   stripes: Stripe[];
+  activeStripeBrush: ActiveStripeBrush;
+  hoverPosition: { x: number; y: number } | null;
   fitScale: number;
   zoom: number;
   panX: number;
@@ -82,9 +79,13 @@ type FabricCanvasProps = {
   onResetZoom: () => void;
   onRulersEnabledChange: (enabled: boolean) => void;
   onDownload: () => void;
-  onPointerDown: (event: React.PointerEvent) => void;
-  onPointerMove: (event: React.PointerEvent) => void;
-  onPointerUp: (event: React.PointerEvent) => void;
+  onStripePointerDown: (event: React.PointerEvent) => void;
+  onStripePointerMove: (event: React.PointerEvent) => void;
+  onStripePointerUp: (event: React.PointerEvent) => void;
+  onEmptyCanvasPointerDown: (event: React.PointerEvent) => void;
+  onBrushPointerMove: (event: React.PointerEvent) => void;
+  onBrushPointerUp: (event: React.PointerEvent) => void;
+  onBrushPointerLeave: () => void;
   onViewportPointerDown: (event: React.PointerEvent) => boolean;
   onViewportPanStart: (event: React.PointerEvent) => void;
   onViewportPointerMove: (event: React.PointerEvent) => boolean;
@@ -97,6 +98,8 @@ export function FabricCanvas({
   canvasWidth,
   canvasHeight,
   stripes,
+  activeStripeBrush,
+  hoverPosition,
   fitScale,
   zoom,
   panX,
@@ -112,9 +115,13 @@ export function FabricCanvas({
   onResetZoom,
   onRulersEnabledChange,
   onDownload,
-  onPointerDown,
-  onPointerMove,
-  onPointerUp,
+  onStripePointerDown,
+  onStripePointerMove,
+  onStripePointerUp,
+  onEmptyCanvasPointerDown,
+  onBrushPointerMove,
+  onBrushPointerUp,
+  onBrushPointerLeave,
   onViewportPointerDown,
   onViewportPanStart,
   onViewportPointerMove,
@@ -127,7 +134,9 @@ export function FabricCanvas({
     ? "cursor-grabbing"
     : isSpacePressed
       ? "cursor-grab"
-      : "cursor-grab";
+      : activeStripeBrush.orientation !== null
+        ? "cursor-crosshair"
+        : "cursor-grab";
 
   const handlePointerDown = (event: React.PointerEvent) => {
     if (onViewportPointerDown(event)) {
@@ -144,9 +153,12 @@ export function FabricCanvas({
       const hit = findStripeAtPoint(stripes, pos.x, pos.y);
 
       if (hit) {
-        onPointerDown(event);
+        onStripePointerDown(event);
         return;
       }
+
+      onEmptyCanvasPointerDown(event);
+      return;
     }
 
     onViewportPanStart(event);
@@ -154,14 +166,20 @@ export function FabricCanvas({
 
   const handlePointerMove = (event: React.PointerEvent) => {
     const isViewportGesture = onViewportPointerMove(event);
+    onBrushPointerMove(event);
     if (!isViewportGesture) {
-      onPointerMove(event);
+      onStripePointerMove(event);
     }
   };
 
   const handlePointerUp = (event: React.PointerEvent) => {
     onViewportPointerUp(event);
-    onPointerUp(event);
+    onBrushPointerUp(event);
+    onStripePointerUp(event);
+  };
+
+  const handlePointerLeave = () => {
+    onBrushPointerLeave();
   };
 
   return (
@@ -172,7 +190,7 @@ export function FabricCanvas({
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
-        onPointerLeave={handlePointerUp}
+        onPointerLeave={handlePointerLeave}
       >
         <div
           className="absolute"
@@ -189,18 +207,27 @@ export function FabricCanvas({
             fitScale={fitScale}
             zoom={zoom}
           >
-            <canvas
-              ref={canvasRef}
-              width={canvasWidth}
-              height={canvasHeight}
-              className={[
-                "border border-stone-200 bg-white shadow-sm touch-none",
-                cursorClass,
-              ].join(" ")}
-              style={{ width: displayWidth, height: displayHeight }}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-            />
+            <div className="relative">
+              <canvas
+                ref={canvasRef}
+                width={canvasWidth}
+                height={canvasHeight}
+                className={[
+                  "border border-stone-200 bg-white shadow-sm touch-none",
+                  cursorClass,
+                ].join(" ")}
+                style={{ width: displayWidth, height: displayHeight }}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerLeave={handlePointerLeave}
+              />
+              <StripeBrushPreview
+                activeStripeBrush={activeStripeBrush}
+                hoverPosition={hoverPosition}
+                canvasWidth={canvasWidth}
+                canvasHeight={canvasHeight}
+              />
+            </div>
           </FabricRulers>
         </div>
         <CanvasToolbar

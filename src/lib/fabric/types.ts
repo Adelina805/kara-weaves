@@ -89,7 +89,8 @@ export type WeavePatternParams = {
   waffle: WaffleWeaveParams;
 };
 
-export type NewStripeDraft = {
+export type ActiveStripeBrush = {
+  orientation: StripeOrientation | null;
   width: number;
   color: string;
 };
