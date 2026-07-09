@@ -20,7 +20,7 @@ export {
 } from "./render/draw-rulers";
 export { fillPatternRect } from "./render/fill-pattern";
 export { renderFabric } from "./render/render-fabric";
-export { findStripeAtPoint } from "./stripes/hit-test";
+export { findStripeAtPoint, type StripeHit } from "./stripes/hit-test";
 export {
   CANVAS_SIZE_PRESETS,
   DEFAULT_TEXTILE_PRESET_ID,

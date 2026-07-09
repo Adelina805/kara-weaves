@@ -1,7 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
-import type { ActiveStripeBrush, FabricDesign, Stripe } from "@/lib/fabric";
+import type { ActiveStripeBrush, FabricDesign, Stripe, StripeHit } from "@/lib/fabric";
 import { findStripeAtPoint, getCanvasPointerPosition } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { CanvasToolbar } from "./CanvasToolbar";
@@ -82,7 +82,7 @@ type FabricCanvasProps = {
   onStripePointerDown: (event: React.PointerEvent) => void;
   onStripePointerMove: (event: React.PointerEvent) => void;
   onStripePointerUp: (event: React.PointerEvent) => void;
-  onEmptyCanvasPointerDown: (event: React.PointerEvent) => void;
+  onCanvasPointerDown: (event: React.PointerEvent, stripeHit: StripeHit | null) => void;
   onBrushPointerMove: (event: React.PointerEvent) => void;
   onBrushPointerUp: (event: React.PointerEvent) => void;
   onBrushPointerLeave: () => void;
@@ -118,7 +118,7 @@ export function FabricCanvas({
   onStripePointerDown,
   onStripePointerMove,
   onStripePointerUp,
-  onEmptyCanvasPointerDown,
+  onCanvasPointerDown,
   onBrushPointerMove,
   onBrushPointerUp,
   onBrushPointerLeave,
@@ -151,13 +151,19 @@ export function FabricCanvas({
     if (canvas?.contains(event.target as Node)) {
       const pos = getCanvasPointerPosition(canvas, event.clientX, event.clientY);
       const hit = findStripeAtPoint(stripes, pos.x, pos.y);
+      const brushActive = activeStripeBrush.orientation !== null;
+
+      if (brushActive) {
+        onCanvasPointerDown(event, hit);
+        return;
+      }
 
       if (hit) {
         onStripePointerDown(event);
         return;
       }
 
-      onEmptyCanvasPointerDown(event);
+      onCanvasPointerDown(event, null);
       return;
     }
 

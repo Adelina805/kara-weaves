@@ -44,7 +44,13 @@ export function FabricDesignerApp() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { isDragging, handlePointerDown, handlePointerMove, handlePointerUp } = useStripeDrag({
+  const {
+    isDragging,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+    startDragFromHit,
+  } = useStripeDrag({
     design,
     onMoveStripe: moveStripe,
     canvasRef,
@@ -53,7 +59,7 @@ export function FabricDesignerApp() {
 
   const {
     hoverPosition,
-    handleEmptyPointerDown,
+    handleCanvasPointerDown,
     handlePointerMove: handleBrushPointerMove,
     handlePointerUp: handleBrushPointerUp,
     handlePointerLeave: handleBrushPointerLeave,
@@ -66,6 +72,7 @@ export function FabricDesignerApp() {
     isPanning,
     isSpacePressed,
     onDeferredPanStart: handleViewportPanStart,
+    onDeferredStripeDragStart: startDragFromHit,
   });
 
   useFabricRenderer(design, isDragging, canvasRef);
@@ -131,7 +138,7 @@ export function FabricDesignerApp() {
           onStripePointerDown={handlePointerDown}
           onStripePointerMove={handlePointerMove}
           onStripePointerUp={handlePointerUp}
-          onEmptyCanvasPointerDown={handleEmptyPointerDown}
+          onCanvasPointerDown={handleCanvasPointerDown}
           onBrushPointerMove={handleBrushPointerMove}
           onBrushPointerUp={handleBrushPointerUp}
           onBrushPointerLeave={handleBrushPointerLeave}

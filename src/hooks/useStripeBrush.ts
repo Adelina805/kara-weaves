@@ -7,9 +7,11 @@ import {
   resolveTextilePreset,
   type ActiveStripeBrush,
   type FabricDesign,
+  type StripeHit,
 } from "@/lib/fabric";
 
-const PLACEMENT_DRAG_THRESHOLD = 5;
+const PLACEMENT_CLICK_THRESHOLD = 5;
+const INTERACTION_DRAG_THRESHOLD = 8;
 
 type PendingClick = {
   pointerId: number;
@@ -17,6 +19,7 @@ type PendingClick = {
   clientY: number;
   canvasX: number;
   canvasY: number;
+  stripeHit: StripeHit | null;
 };
 
 type UseStripeBrushOptions = {
@@ -28,6 +31,7 @@ type UseStripeBrushOptions = {
   isPanning: boolean;
   isSpacePressed: boolean;
   onDeferredPanStart: (event: React.PointerEvent) => void;
+  onDeferredStripeDragStart: (event: React.PointerEvent, hit: StripeHit) => void;
 };
 
 export function useStripeBrush({
@@ -39,14 +43,15 @@ export function useStripeBrush({
   isPanning,
   isSpacePressed,
   onDeferredPanStart,
+  onDeferredStripeDragStart,
 }: UseStripeBrushOptions) {
   const [hoverPosition, setHoverPosition] = useState<{ x: number; y: number } | null>(null);
   const pendingClickRef = useRef<PendingClick | null>(null);
-  const deferredPanStartedRef = useRef(false);
+  const interactionStartedRef = useRef(false);
 
   const clearPendingClick = useCallback(() => {
     pendingClickRef.current = null;
-    deferredPanStartedRef.current = false;
+    interactionStartedRef.current = false;
   }, []);
 
   const showPreview =
@@ -56,8 +61,8 @@ export function useStripeBrush({
     !isPanning &&
     !isSpacePressed;
 
-  const handleEmptyPointerDown = useCallback(
-    (event: React.PointerEvent) => {
+  const handleCanvasPointerDown = useCallback(
+    (event: React.PointerEvent, stripeHit: StripeHit | null) => {
       const canvas = canvasRef.current;
       if (!canvas) {
         return;
@@ -70,8 +75,9 @@ export function useStripeBrush({
         clientY: event.clientY,
         canvasX: pos.x,
         canvasY: pos.y,
+        stripeHit,
       };
-      deferredPanStartedRef.current = false;
+      interactionStartedRef.current = false;
     },
     [canvasRef],
   );
@@ -101,19 +107,28 @@ export function useStripeBrush({
       if (
         pending &&
         pending.pointerId === event.pointerId &&
-        !deferredPanStartedRef.current
+        !interactionStartedRef.current &&
+        !isStripeDragging
       ) {
         const dx = event.clientX - pending.clientX;
         const dy = event.clientY - pending.clientY;
-        if (dx * dx + dy * dy >= PLACEMENT_DRAG_THRESHOLD * PLACEMENT_DRAG_THRESHOLD) {
-          deferredPanStartedRef.current = true;
-          onDeferredPanStart(event);
+        const dragThreshold = pending.stripeHit
+          ? INTERACTION_DRAG_THRESHOLD
+          : PLACEMENT_CLICK_THRESHOLD;
+
+        if (dx * dx + dy * dy >= dragThreshold * dragThreshold) {
+          interactionStartedRef.current = true;
+          if (pending.stripeHit) {
+            onDeferredStripeDragStart(event, pending.stripeHit);
+          } else {
+            onDeferredPanStart(event);
+          }
         }
       }
 
       updateHoverFromEvent(event);
     },
-    [onDeferredPanStart, updateHoverFromEvent],
+    [isStripeDragging, onDeferredPanStart, onDeferredStripeDragStart, updateHoverFromEvent],
   );
 
   const handlePointerUp = useCallback(
@@ -122,11 +137,12 @@ export function useStripeBrush({
       if (
         pending &&
         pending.pointerId === event.pointerId &&
-        !deferredPanStartedRef.current
+        !interactionStartedRef.current &&
+        !isStripeDragging
       ) {
         const dx = event.clientX - pending.clientX;
         const dy = event.clientY - pending.clientY;
-        if (dx * dx + dy * dy < PLACEMENT_DRAG_THRESHOLD * PLACEMENT_DRAG_THRESHOLD) {
+        if (dx * dx + dy * dy < PLACEMENT_CLICK_THRESHOLD * PLACEMENT_CLICK_THRESHOLD) {
           const { orientation, width } = activeStripeBrush;
           if (orientation !== null) {
             const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
@@ -146,6 +162,7 @@ export function useStripeBrush({
       activeStripeBrush,
       clearPendingClick,
       design.textilePreset,
+      isStripeDragging,
       placeStripe,
       updateHoverFromEvent,
     ],
@@ -158,7 +175,7 @@ export function useStripeBrush({
 
   return {
     hoverPosition: showPreview ? hoverPosition : null,
-    handleEmptyPointerDown,
+    handleCanvasPointerDown,
     handlePointerMove,
     handlePointerUp,
     handlePointerLeave,
