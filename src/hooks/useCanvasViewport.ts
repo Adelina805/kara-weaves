@@ -6,6 +6,7 @@ const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 4;
 const ZOOM_STEP = 0.25;
 const WHEEL_ZOOM_SENSITIVITY = 0.005;
+const MIN_VISIBLE_FRACTION = 0.25;
 
 function clampZoom(value: number): number {
   return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, value));
@@ -28,10 +29,10 @@ function clampPan(
   const viewMaxX = container.clientWidth - padRight;
   const viewMaxY = container.clientHeight - padBottom;
 
-  const minPanX = Math.min(viewMinX, viewMaxX - displayWidth);
-  const maxPanX = Math.max(viewMinX, viewMaxX - displayWidth);
-  const minPanY = Math.min(viewMinY, viewMaxY - displayHeight);
-  const maxPanY = Math.max(viewMinY, viewMaxY - displayHeight);
+  const minPanX = viewMinX - (1 - MIN_VISIBLE_FRACTION) * displayWidth;
+  const maxPanX = viewMaxX - MIN_VISIBLE_FRACTION * displayWidth;
+  const minPanY = viewMinY - (1 - MIN_VISIBLE_FRACTION) * displayHeight;
+  const maxPanY = viewMaxY - MIN_VISIBLE_FRACTION * displayHeight;
 
   return {
     x: Math.max(minPanX, Math.min(maxPanX, panX)),
