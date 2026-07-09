@@ -105,6 +105,7 @@ export function FabricDesignerApp() {
             design={design}
             activeStripeBrush={activeStripeBrush}
             dispatch={dispatch}
+            pixelsPerInch={pixelsPerInch}
             onRemoveStripe={removeStripe}
           />
         </div>

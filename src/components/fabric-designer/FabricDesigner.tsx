@@ -22,6 +22,7 @@ type FabricControlsProps = {
   design: FabricDesign;
   activeStripeBrush: ActiveStripeBrush;
   dispatch: FabricDesignDispatch;
+  pixelsPerInch: number;
   onRemoveStripe: (id: string) => void;
 };
 
@@ -29,6 +30,7 @@ export function FabricControls({
   design,
   activeStripeBrush,
   dispatch,
+  pixelsPerInch,
   onRemoveStripe,
 }: FabricControlsProps) {
   return (
@@ -39,6 +41,7 @@ export function FabricControls({
         stripes={design.stripes}
         activeStripeBrush={activeStripeBrush}
         dispatch={dispatch}
+        pixelsPerInch={pixelsPerInch}
         onRemoveStripe={onRemoveStripe}
       />
       <WeaveOutputControls design={design} dispatch={dispatch} />

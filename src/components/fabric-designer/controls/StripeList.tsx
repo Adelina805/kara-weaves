@@ -1,11 +1,13 @@
 import type { Stripe } from "@/lib/fabric";
+import { pixelsToInches } from "@/lib/fabric";
 
 type StripeListProps = {
   stripes: Stripe[];
+  pixelsPerInch: number;
   onRemove: (id: string) => void;
 };
 
-export function StripeList({ stripes, onRemove }: StripeListProps) {
+export function StripeList({ stripes, pixelsPerInch, onRemove }: StripeListProps) {
   if (stripes.length === 0) {
     return null;
   }
@@ -45,8 +47,8 @@ export function StripeList({ stripes, onRemove }: StripeListProps) {
           <p className="font-bold">
             {index + 1}. {stripe.orientation} stripe
           </p>
-          <p>Position: {Math.round(stripe.position)} px</p>
-          <p>Width: {Math.round(stripe.width)} px</p>
+          <p>Position: {pixelsToInches(stripe.position, pixelsPerInch).toFixed(2)} in</p>
+          <p>Width: {pixelsToInches(stripe.width, pixelsPerInch).toFixed(2)} in</p>
           {stripe.orientation === "vertical" ? (
             <p>Warp: {stripe.warpColor}</p>
           ) : (

@@ -30,7 +30,9 @@ export {
   getTextilePixelsPerCm,
   getTextilePixelsPerInch,
   getTextilePresetId,
+  inchesToPixels,
   INCHES_TO_CM,
+  pixelsToInches,
   resolveTextilePreset,
 } from "./textile-presets";
 export type {

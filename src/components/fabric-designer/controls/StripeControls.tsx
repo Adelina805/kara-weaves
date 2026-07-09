@@ -1,13 +1,18 @@
 import type { ActiveStripeBrush, FabricDesign, StripeOrientation } from "@/lib/fabric";
+import { inchesToPixels, pixelsToInches } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { ColorInput, Field, RangeInput } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 import { StripeList } from "./StripeList";
 
+const MIN_STRIPE_WIDTH_PX = 5;
+const MAX_STRIPE_WIDTH_PX = 250;
+
 type StripeControlsProps = {
   stripes: FabricDesign["stripes"];
   activeStripeBrush: ActiveStripeBrush;
   dispatch: FabricDesignDispatch;
+  pixelsPerInch: number;
   onRemoveStripe: (id: string) => void;
 };
 
@@ -51,8 +56,11 @@ export function StripeControls({
   stripes,
   activeStripeBrush,
   dispatch,
+  pixelsPerInch,
   onRemoveStripe,
 }: StripeControlsProps) {
+  const widthInches = pixelsToInches(activeStripeBrush.width, pixelsPerInch);
+
   return (
     <Section title="STRIPE TOOL">
       <Field label="Orientation">
@@ -71,15 +79,19 @@ export function StripeControls({
           }
         />
       </Field>
-      <Field label="Stripe Width">
+      <Field label="Stripe Width (in)">
         <RangeInput
-          min={5}
-          max={250}
-          value={activeStripeBrush.width}
-          valueLabel={activeStripeBrush.width}
+          min={pixelsToInches(MIN_STRIPE_WIDTH_PX, pixelsPerInch)}
+          max={pixelsToInches(MAX_STRIPE_WIDTH_PX, pixelsPerInch)}
+          step={1 / pixelsPerInch}
+          value={widthInches}
+          valueLabel={widthInches.toFixed(2)}
           className="accent-stone-900"
           onChange={(event) =>
-            dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: Number(event.target.value) })
+            dispatch({
+              type: "SET_ACTIVE_STRIPE_WIDTH",
+              value: Math.round(inchesToPixels(Number(event.target.value), pixelsPerInch)),
+            })
           }
         />
       </Field>
@@ -88,7 +100,7 @@ export function StripeControls({
         <br />
         Drag existing stripes to reposition.
       </p>
-      <StripeList stripes={stripes} onRemove={onRemoveStripe} />
+      <StripeList stripes={stripes} pixelsPerInch={pixelsPerInch} onRemove={onRemoveStripe} />
     </Section>
   );
 }

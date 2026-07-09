@@ -117,6 +117,14 @@ export function getTextilePixelsPerInch(resolved: ResolvedTextilePreset): number
   return resolved.canvasWidth / resolved.widthInches;
 }
 
+export function pixelsToInches(pixels: number, pixelsPerInch: number): number {
+  return pixels / pixelsPerInch;
+}
+
+export function inchesToPixels(inches: number, pixelsPerInch: number): number {
+  return inches * pixelsPerInch;
+}
+
 export function getTextilePresetId(
   weaveType: WeaveType,
   sizeId: CanvasSizePresetId,
