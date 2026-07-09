@@ -4,8 +4,7 @@ import type { RefObject } from "react";
 import type { FabricDesign, NewStripeDraft, Stripe } from "@/lib/fabric";
 import { findStripeAtPoint, getCanvasPointerPosition } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
-import { Button } from "@/components/ui/Button";
-import { CanvasZoomControls } from "./CanvasZoomControls";
+import { CanvasToolbar } from "./CanvasToolbar";
 import { FabricRulers } from "./FabricRulers";
 import {
   BodyColorControls,
@@ -15,7 +14,6 @@ import {
 import { StripeControls } from "./controls/StripeControls";
 import {
   LooseWeaveControls,
-  RulerControls,
   WaffleWeaveControls,
 } from "./controls/WeaveSpecificControls";
 
@@ -26,7 +24,6 @@ type FabricControlsProps = {
   onAddVerticalStripe: () => void;
   onAddHorizontalStripe: () => void;
   onRemoveStripe: (id: string) => void;
-  onDownload: () => void;
 };
 
 export function FabricControls({
@@ -36,7 +33,6 @@ export function FabricControls({
   onAddVerticalStripe,
   onAddHorizontalStripe,
   onRemoveStripe,
-  onDownload,
 }: FabricControlsProps) {
   return (
     <div className="p-4">
@@ -61,11 +57,6 @@ export function FabricControls({
         dispatch={dispatch}
         visible={design.weaveType === "waffle"}
       />
-      <RulerControls rulers={design.rulers} dispatch={dispatch} />
-
-      <Button fullWidth variant="secondary" className="mt-2" onClick={onDownload}>
-        Download PNG
-      </Button>
     </div>
   );
 }
@@ -89,6 +80,8 @@ type FabricCanvasProps = {
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
+  onRulersEnabledChange: (enabled: boolean) => void;
+  onDownload: () => void;
   onPointerDown: (event: React.PointerEvent) => void;
   onPointerMove: (event: React.PointerEvent) => void;
   onPointerUp: (event: React.PointerEvent) => void;
@@ -117,6 +110,8 @@ export function FabricCanvas({
   onZoomIn,
   onZoomOut,
   onResetZoom,
+  onRulersEnabledChange,
+  onDownload,
   onPointerDown,
   onPointerMove,
   onPointerUp,
@@ -208,13 +203,16 @@ export function FabricCanvas({
             />
           </FabricRulers>
         </div>
+        <CanvasToolbar
+          zoomPercent={zoomPercent}
+          onZoomIn={onZoomIn}
+          onZoomOut={onZoomOut}
+          onResetZoom={onResetZoom}
+          rulersEnabled={rulersEnabled}
+          onRulersEnabledChange={onRulersEnabledChange}
+          onDownload={onDownload}
+        />
       </div>
-      <CanvasZoomControls
-        zoomPercent={zoomPercent}
-        onZoomIn={onZoomIn}
-        onZoomOut={onZoomOut}
-        onResetZoom={onResetZoom}
-      />
     </div>
   );
 }

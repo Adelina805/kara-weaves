@@ -83,7 +83,6 @@ export function FabricDesignerApp() {
             onAddVerticalStripe={() => addStripe("vertical")}
             onAddHorizontalStripe={() => addStripe("horizontal")}
             onRemoveStripe={removeStripe}
-            onDownload={handleDownload}
           />
         </div>
       </aside>
@@ -107,6 +106,10 @@ export function FabricDesignerApp() {
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetZoom={resetZoom}
+          onRulersEnabledChange={(enabled) =>
+            dispatch({ type: "SET_RULERS_ENABLED", enabled })
+          }
+          onDownload={handleDownload}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
