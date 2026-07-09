@@ -10,6 +10,7 @@ import {
   type Stripe,
   type StripeOrientation,
   type TextilePresetId,
+  type RulerUnit,
 } from "@/lib/fabric";
 
 type FabricDesignAction =
@@ -24,6 +25,7 @@ type FabricDesignAction =
   | { type: "SET_WAFFLE_CELL_SCALE"; value: number }
   | { type: "SET_WAFFLE_DEPTH"; value: number }
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
+  | { type: "SET_DISPLAY_UNIT"; unit: RulerUnit }
   | { type: "SET_ACTIVE_STRIPE_WIDTH"; value: number }
   | { type: "SET_ACTIVE_STRIPE_COLOR"; color: string }
   | { type: "SET_ACTIVE_STRIPE_ORIENTATION"; orientation: StripeOrientation | null }
@@ -139,6 +141,14 @@ function fabricDesignReducer(
         design: {
           ...state.design,
           rulers: { ...state.design.rulers, enabled: action.enabled },
+        },
+      };
+    case "SET_DISPLAY_UNIT":
+      return {
+        ...state,
+        design: {
+          ...state.design,
+          rulers: { ...state.design.rulers, unit: action.unit },
         },
       };
     case "SET_ACTIVE_STRIPE_WIDTH":

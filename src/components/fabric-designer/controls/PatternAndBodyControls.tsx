@@ -1,17 +1,22 @@
 import {
   FABRIC_PRESETS,
   TEXTILE_PRESET_OPTIONS,
+  formatSizeLabel,
   type FabricDesign,
+  type RulerUnit,
   type TextilePresetId,
   resolveTextilePreset,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { ColorInput, Field, Select } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
+import { UnitSegment } from "./UnitSegment";
 
 type FabricSizeSelectProps = {
   design: FabricDesign;
   dispatch: FabricDesignDispatch;
+  unit: RulerUnit;
+  onUnitChange: (unit: RulerUnit) => void;
 };
 
 const groupedTextilePresetOptions = FABRIC_PRESETS.map((fabric) => ({
@@ -37,9 +42,12 @@ const groupedTextilePresetOptions = FABRIC_PRESETS.map((fabric) => ({
     ),
 }));
 
-export function FabricSizeSelect({ design, dispatch }: FabricSizeSelectProps) {
+export function FabricSizeSelect({ design, dispatch, unit, onUnitChange }: FabricSizeSelectProps) {
   return (
-    <Section title="Fabric & Size">
+    <Section
+      title="Fabric & Size"
+      action={<UnitSegment unit={unit} onChange={onUnitChange} />}
+    >
       <div className="mt-3">
         <Select
           value={design.textilePreset}
@@ -56,11 +64,14 @@ export function FabricSizeSelect({ design, dispatch }: FabricSizeSelectProps) {
               label={group.label}
               className="font-semibold text-stone-900"
             >
-              {group.options.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.sizeLabel}
-                </option>
-              ))}
+              {group.options.map((option) => {
+                const preset = resolveTextilePreset(option.id);
+                return (
+                  <option key={option.id} value={option.id}>
+                    {formatSizeLabel(preset.widthInches, preset.heightInches, unit)}
+                  </option>
+                );
+              })}
             </optgroup>
           ))}
         </Select>

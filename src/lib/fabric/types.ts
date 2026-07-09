@@ -58,6 +58,7 @@ export type RulerUnit = "metric" | "imperial";
 
 export type RulerSettings = {
   enabled: boolean;
+  unit: RulerUnit;
 };
 
 export type FabricDesign = {

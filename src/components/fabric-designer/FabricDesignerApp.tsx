@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { downloadFabricPng, getTextilePixelsPerInch, resolveTextilePreset } from "@/lib/fabric";
+import { downloadFabricPng, getPixelsPerDisplayUnit, getTextilePixelsPerCm, getTextilePixelsPerInch, resolveTextilePreset } from "@/lib/fabric";
 import { useCanvasViewport } from "@/hooks/useCanvasViewport";
 import { useFabricDesignState } from "@/hooks/useFabricDesignState";
 import { useFabricRenderer } from "@/hooks/useFabricRenderer";
@@ -22,6 +22,9 @@ export function FabricDesignerApp() {
   const textilePreset = resolveTextilePreset(design.textilePreset);
   const { canvasWidth, canvasHeight } = textilePreset;
   const pixelsPerInch = getTextilePixelsPerInch(textilePreset);
+  const pixelsPerCm = getTextilePixelsPerCm(textilePreset);
+  const displayUnit = design.rulers.unit;
+  const pixelsPerDisplayUnit = getPixelsPerDisplayUnit(textilePreset, displayUnit);
 
   const {
     containerRef,
@@ -105,7 +108,9 @@ export function FabricDesignerApp() {
             design={design}
             activeStripeBrush={activeStripeBrush}
             dispatch={dispatch}
-            pixelsPerInch={pixelsPerInch}
+            pixelsPerDisplayUnit={pixelsPerDisplayUnit}
+            unit={displayUnit}
+            onUnitChange={(unit) => dispatch({ type: "SET_DISPLAY_UNIT", unit })}
             onRemoveStripe={removeStripe}
           />
         </div>
@@ -129,6 +134,8 @@ export function FabricDesignerApp() {
           isSpacePressed={isSpacePressed}
           rulersEnabled={design.rulers.enabled}
           pixelsPerInch={pixelsPerInch}
+          pixelsPerCm={pixelsPerCm}
+          unit={displayUnit}
           onZoomIn={zoomIn}
           onZoomOut={zoomOut}
           onResetZoom={resetZoom}

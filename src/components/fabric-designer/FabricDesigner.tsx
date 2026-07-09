@@ -1,7 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
-import type { ActiveStripeBrush, FabricDesign, Stripe, StripeHit } from "@/lib/fabric";
+import type { ActiveStripeBrush, FabricDesign, Stripe, StripeHit, RulerUnit } from "@/lib/fabric";
 import { findStripeAtPoint, getCanvasPointerPosition } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { CanvasToolbar } from "./CanvasToolbar";
@@ -22,7 +22,9 @@ type FabricControlsProps = {
   design: FabricDesign;
   activeStripeBrush: ActiveStripeBrush;
   dispatch: FabricDesignDispatch;
-  pixelsPerInch: number;
+  pixelsPerDisplayUnit: number;
+  unit: RulerUnit;
+  onUnitChange: (unit: RulerUnit) => void;
   onRemoveStripe: (id: string) => void;
 };
 
@@ -30,18 +32,26 @@ export function FabricControls({
   design,
   activeStripeBrush,
   dispatch,
-  pixelsPerInch,
+  pixelsPerDisplayUnit,
+  unit,
+  onUnitChange,
   onRemoveStripe,
 }: FabricControlsProps) {
   return (
     <div className="p-4">
-      <FabricSizeSelect design={design} dispatch={dispatch} />
+      <FabricSizeSelect
+        design={design}
+        dispatch={dispatch}
+        unit={unit}
+        onUnitChange={onUnitChange}
+      />
       <BodyColorControls body={design.body} dispatch={dispatch} />
       <StripeControls
         stripes={design.stripes}
         activeStripeBrush={activeStripeBrush}
         dispatch={dispatch}
-        pixelsPerInch={pixelsPerInch}
+        pixelsPerDisplayUnit={pixelsPerDisplayUnit}
+        unit={unit}
         onRemoveStripe={onRemoveStripe}
       />
       <WeaveOutputControls design={design} dispatch={dispatch} />
@@ -77,6 +87,8 @@ type FabricCanvasProps = {
   isSpacePressed: boolean;
   rulersEnabled: boolean;
   pixelsPerInch: number;
+  pixelsPerCm: number;
+  unit: RulerUnit;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onResetZoom: () => void;
@@ -113,6 +125,8 @@ export function FabricCanvas({
   isSpacePressed,
   rulersEnabled,
   pixelsPerInch,
+  pixelsPerCm,
+  unit,
   onZoomIn,
   onZoomOut,
   onResetZoom,
@@ -237,8 +251,10 @@ export function FabricCanvas({
           displayWidth={displayWidth}
           displayHeight={displayHeight}
           pixelsPerInch={pixelsPerInch}
+          pixelsPerCm={pixelsPerCm}
           fitScale={fitScale}
           zoom={zoom}
+          unit={unit}
         />
         <CanvasToolbar
           zoomPercent={zoomPercent}

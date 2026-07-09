@@ -36,6 +36,7 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   },
   rulers: {
     enabled: false,
+    unit: "imperial",
   },
 };
 

@@ -62,3 +62,11 @@ export type {
   WeaveType,
 } from "./types";
 export { createWeavePattern } from "./weaves/create-weave-pattern";
+export {
+  displayUnitToPixels,
+  formatDisplayValue,
+  formatSizeLabel,
+  getPixelsPerDisplayUnit,
+  getUnitSuffix,
+  pixelsToDisplayUnit,
+} from "./units";

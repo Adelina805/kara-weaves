@@ -1,5 +1,10 @@
-import type { ActiveStripeBrush, FabricDesign, StripeOrientation } from "@/lib/fabric";
-import { inchesToPixels, pixelsToInches } from "@/lib/fabric";
+import type { ActiveStripeBrush, FabricDesign, StripeOrientation, RulerUnit } from "@/lib/fabric";
+import {
+  displayUnitToPixels,
+  formatDisplayValue,
+  getUnitSuffix,
+  pixelsToDisplayUnit,
+} from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { ColorInput, Field, RangeInput } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
@@ -12,7 +17,8 @@ type StripeControlsProps = {
   stripes: FabricDesign["stripes"];
   activeStripeBrush: ActiveStripeBrush;
   dispatch: FabricDesignDispatch;
-  pixelsPerInch: number;
+  pixelsPerDisplayUnit: number;
+  unit: RulerUnit;
   onRemoveStripe: (id: string) => void;
 };
 
@@ -56,10 +62,11 @@ export function StripeControls({
   stripes,
   activeStripeBrush,
   dispatch,
-  pixelsPerInch,
+  pixelsPerDisplayUnit,
+  unit,
   onRemoveStripe,
 }: StripeControlsProps) {
-  const widthInches = pixelsToInches(activeStripeBrush.width, pixelsPerInch);
+  const displayWidth = pixelsToDisplayUnit(activeStripeBrush.width, pixelsPerDisplayUnit);
 
   return (
     <Section title="STRIPE TOOL">
@@ -79,18 +86,18 @@ export function StripeControls({
           }
         />
       </Field>
-      <Field label="Stripe Width (in)">
+      <Field label={`Stripe Width (${getUnitSuffix(unit)})`}>
         <RangeInput
-          min={pixelsToInches(MIN_STRIPE_WIDTH_PX, pixelsPerInch)}
-          max={pixelsToInches(MAX_STRIPE_WIDTH_PX, pixelsPerInch)}
-          step={1 / pixelsPerInch}
-          value={widthInches}
-          valueLabel={widthInches.toFixed(2)}
+          min={pixelsToDisplayUnit(MIN_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
+          max={pixelsToDisplayUnit(MAX_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
+          step={1 / pixelsPerDisplayUnit}
+          value={displayWidth}
+          valueLabel={formatDisplayValue(displayWidth, unit)}
           className="accent-stone-900"
           onChange={(event) =>
             dispatch({
               type: "SET_ACTIVE_STRIPE_WIDTH",
-              value: Math.round(inchesToPixels(Number(event.target.value), pixelsPerInch)),
+              value: displayUnitToPixels(Number(event.target.value), pixelsPerDisplayUnit),
             })
           }
         />
@@ -100,7 +107,12 @@ export function StripeControls({
         <br />
         Drag existing stripes to reposition.
       </p>
-      <StripeList stripes={stripes} pixelsPerInch={pixelsPerInch} onRemove={onRemoveStripe} />
+      <StripeList
+        stripes={stripes}
+        pixelsPerDisplayUnit={pixelsPerDisplayUnit}
+        unit={unit}
+        onRemove={onRemoveStripe}
+      />
     </Section>
   );
 }

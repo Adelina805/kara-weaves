@@ -19,6 +19,7 @@ type FabricRulersProps = {
   displayWidth: number;
   displayHeight: number;
   pixelsPerInch: number;
+  pixelsPerCm: number;
   fitScale: number;
   zoom: number;
   unit?: RulerUnit;
@@ -51,6 +52,7 @@ export function FabricRulers({
   displayWidth,
   displayHeight,
   pixelsPerInch,
+  pixelsPerCm,
   fitScale,
   zoom,
   unit = "imperial",
@@ -59,7 +61,8 @@ export function FabricRulers({
   const topRef = useRef<HTMLCanvasElement>(null);
   const leftRef = useRef<HTMLCanvasElement>(null);
 
-  const displayPixelsPerUnit = pixelsPerInch * fitScale * zoom;
+  const pixelsPerDisplayUnit = unit === "imperial" ? pixelsPerInch : pixelsPerCm;
+  const displayPixelsPerUnit = pixelsPerDisplayUnit * fitScale * zoom;
 
   useEffect(() => {
     if (!enabled) {

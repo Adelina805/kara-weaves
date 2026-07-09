@@ -1,16 +1,19 @@
-import type { Stripe } from "@/lib/fabric";
-import { pixelsToInches } from "@/lib/fabric";
+import type { RulerUnit, Stripe } from "@/lib/fabric";
+import { formatDisplayValue, getUnitSuffix, pixelsToDisplayUnit } from "@/lib/fabric";
 
 type StripeListProps = {
   stripes: Stripe[];
-  pixelsPerInch: number;
+  pixelsPerDisplayUnit: number;
+  unit: RulerUnit;
   onRemove: (id: string) => void;
 };
 
-export function StripeList({ stripes, pixelsPerInch, onRemove }: StripeListProps) {
+export function StripeList({ stripes, pixelsPerDisplayUnit, unit, onRemove }: StripeListProps) {
   if (stripes.length === 0) {
     return null;
   }
+
+  const suffix = getUnitSuffix(unit);
 
   return (
     <ul className="mt-3 space-y-2">
@@ -47,8 +50,22 @@ export function StripeList({ stripes, pixelsPerInch, onRemove }: StripeListProps
           <p className="font-bold">
             {index + 1}. {stripe.orientation} stripe
           </p>
-          <p>Position: {pixelsToInches(stripe.position, pixelsPerInch).toFixed(2)} in</p>
-          <p>Width: {pixelsToInches(stripe.width, pixelsPerInch).toFixed(2)} in</p>
+          <p>
+            Position:{" "}
+            {formatDisplayValue(
+              pixelsToDisplayUnit(stripe.position, pixelsPerDisplayUnit),
+              unit,
+            )}{" "}
+            {suffix}
+          </p>
+          <p>
+            Width:{" "}
+            {formatDisplayValue(
+              pixelsToDisplayUnit(stripe.width, pixelsPerDisplayUnit),
+              unit,
+            )}{" "}
+            {suffix}
+          </p>
           {stripe.orientation === "vertical" ? (
             <p>Warp: {stripe.warpColor}</p>
           ) : (
