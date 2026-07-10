@@ -69,7 +69,16 @@ export function StripeControls({
   const displayWidth = pixelsToDisplayUnit(activeStripeBrush.width, pixelsPerDisplayUnit);
 
   return (
-    <Section title="STRIPE TOOL">
+    <Section
+      title="STRIPE TOOL"
+      info={
+        <>
+          Click the textile to place stripes. Drag to reposition.
+          <br />
+          Choose orientation to activate, click again to turn off.
+        </>
+      }
+    >
       <Field label="Orientation">
         <OrientationSegment
           orientation={activeStripeBrush.orientation}
@@ -102,11 +111,6 @@ export function StripeControls({
           }
         />
       </Field>
-      <p className="mt-3 text-sm text-stone-500">
-        Click the textile to place a stripe.
-        <br />
-        Drag existing stripes to reposition.
-      </p>
       <StripeList
         stripes={stripes}
         pixelsPerDisplayUnit={pixelsPerDisplayUnit}
