@@ -2,8 +2,11 @@
 
 import { useCallback, useReducer } from "react";
 import {
+  clampStripePosition,
   DEFAULT_ACTIVE_STRIPE_BRUSH,
   DEFAULT_FABRIC_DESIGN,
+  MAX_STRIPE_WIDTH_PX,
+  MIN_STRIPE_WIDTH_PX,
   resolveTextilePreset,
   type ActiveStripeBrush,
   type FabricDesign,
@@ -32,6 +35,7 @@ type FabricDesignAction =
   | { type: "PLACE_STRIPE"; position: number }
   | { type: "REMOVE_STRIPE"; id: string }
   | { type: "MOVE_STRIPE"; id: string; position: number }
+  | { type: "UPDATE_STRIPE"; id: string; width?: number; color?: string }
   | { type: "RESET_DESIGN" };
 
 function createStripeId(): string {
@@ -206,6 +210,45 @@ function fabricDesignReducer(
           ),
         },
       };
+    case "UPDATE_STRIPE": {
+      const stripe = state.design.stripes.find((entry) => entry.id === action.id);
+      if (!stripe) {
+        return state;
+      }
+
+      const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
+      const canvasSize = stripe.orientation === "vertical" ? canvasWidth : canvasHeight;
+      let updated = { ...stripe };
+
+      if (action.width !== undefined) {
+        const width = Math.max(
+          MIN_STRIPE_WIDTH_PX,
+          Math.min(MAX_STRIPE_WIDTH_PX, action.width),
+        );
+        updated = {
+          ...updated,
+          width,
+          position: clampStripePosition(updated.position, width, canvasSize),
+        };
+      }
+
+      if (action.color !== undefined) {
+        updated =
+          stripe.orientation === "vertical"
+            ? { ...updated, warpColor: action.color }
+            : { ...updated, weftColor: action.color };
+      }
+
+      return {
+        ...state,
+        design: {
+          ...state.design,
+          stripes: state.design.stripes.map((entry) =>
+            entry.id === action.id ? updated : entry,
+          ),
+        },
+      };
+    }
     case "RESET_DESIGN":
       return {
         design: DEFAULT_FABRIC_DESIGN,

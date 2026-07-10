@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { downloadFabricPng, getPixelsPerDisplayUnit, getTextilePixelsPerCm, getTextilePixelsPerInch, resolveTextilePreset } from "@/lib/fabric";
 import { useCanvasViewport } from "@/hooks/useCanvasViewport";
 import { useFabricDesignState } from "@/hooks/useFabricDesignState";
@@ -18,6 +18,8 @@ export function FabricDesignerApp() {
     removeStripe,
     moveStripe,
   } = useFabricDesignState();
+
+  const [selectedStripeId, setSelectedStripeId] = useState<string | null>(null);
 
   const textilePreset = resolveTextilePreset(design.textilePreset);
   const { canvasWidth, canvasHeight } = textilePreset;
@@ -47,6 +49,22 @@ export function FabricDesignerApp() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  const handleSelectStripe = useCallback((id: string) => {
+    setSelectedStripeId((current) => (current === id ? null : id));
+  }, []);
+
+  const handleCanvasStripeClick = useCallback((id: string) => {
+    setSelectedStripeId(id);
+  }, []);
+
+  const handleRemoveStripe = useCallback(
+    (id: string) => {
+      removeStripe(id);
+      setSelectedStripeId((current) => (current === id ? null : current));
+    },
+    [removeStripe],
+  );
+
   const {
     isDragging,
     handlePointerDown,
@@ -56,6 +74,7 @@ export function FabricDesignerApp() {
   } = useStripeDrag({
     design,
     onMoveStripe: moveStripe,
+    onStripeClick: handleCanvasStripeClick,
     canvasRef,
     isGestureActive: isViewportGestureActive,
   });
@@ -78,11 +97,30 @@ export function FabricDesignerApp() {
     onDeferredStripeDragStart: startDragFromHit,
   });
 
+  const handleCanvasPointerDownWithDeselect = useCallback(
+    (event: React.PointerEvent, stripeHit: Parameters<typeof handleCanvasPointerDown>[1]) => {
+      if (activeStripeBrush.orientation === null && stripeHit === null) {
+        setSelectedStripeId(null);
+      }
+      handleCanvasPointerDown(event, stripeHit);
+    },
+    [activeStripeBrush.orientation, handleCanvasPointerDown],
+  );
+
   useFabricRenderer(design, isDragging, canvasRef);
 
   useEffect(() => {
     resetZoom();
   }, [design.textilePreset, resetZoom]);
+
+  useEffect(() => {
+    if (
+      selectedStripeId !== null &&
+      !design.stripes.some((stripe) => stripe.id === selectedStripeId)
+    ) {
+      setSelectedStripeId(null);
+    }
+  }, [design.stripes, selectedStripeId]);
 
   const handleDownload = () => {
     const canvas = canvasRef.current;
@@ -110,8 +148,10 @@ export function FabricDesignerApp() {
             dispatch={dispatch}
             pixelsPerDisplayUnit={pixelsPerDisplayUnit}
             unit={displayUnit}
+            selectedStripeId={selectedStripeId}
+            onSelectStripe={handleSelectStripe}
             onUnitChange={(unit) => dispatch({ type: "SET_DISPLAY_UNIT", unit })}
-            onRemoveStripe={removeStripe}
+            onRemoveStripe={handleRemoveStripe}
           />
         </div>
       </aside>
@@ -146,7 +186,7 @@ export function FabricDesignerApp() {
           onStripePointerDown={handlePointerDown}
           onStripePointerMove={handlePointerMove}
           onStripePointerUp={handlePointerUp}
-          onCanvasPointerDown={handleCanvasPointerDown}
+          onCanvasPointerDown={handleCanvasPointerDownWithDeselect}
           onBrushPointerMove={handleBrushPointerMove}
           onBrushPointerUp={handleBrushPointerUp}
           onBrushPointerLeave={handleBrushPointerLeave}

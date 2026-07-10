@@ -24,6 +24,8 @@ type FabricControlsProps = {
   dispatch: FabricDesignDispatch;
   pixelsPerDisplayUnit: number;
   unit: RulerUnit;
+  selectedStripeId: string | null;
+  onSelectStripe: (id: string) => void;
   onUnitChange: (unit: RulerUnit) => void;
   onRemoveStripe: (id: string) => void;
 };
@@ -34,6 +36,8 @@ export function FabricControls({
   dispatch,
   pixelsPerDisplayUnit,
   unit,
+  selectedStripeId,
+  onSelectStripe,
   onUnitChange,
   onRemoveStripe,
 }: FabricControlsProps) {
@@ -52,6 +56,8 @@ export function FabricControls({
         dispatch={dispatch}
         pixelsPerDisplayUnit={pixelsPerDisplayUnit}
         unit={unit}
+        selectedStripeId={selectedStripeId}
+        onSelectStripe={onSelectStripe}
         onRemoveStripe={onRemoveStripe}
       />
       <WeaveOutputControls design={design} dispatch={dispatch} />

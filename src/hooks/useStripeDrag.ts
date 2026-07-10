@@ -24,6 +24,7 @@ type PendingDrag = {
 type UseStripeDragOptions = {
   design: FabricDesign;
   onMoveStripe: (id: string, position: number) => void;
+  onStripeClick?: (id: string) => void;
   canvasRef: RefObject<HTMLCanvasElement | null>;
   isGestureActive?: boolean;
 };
@@ -31,6 +32,7 @@ type UseStripeDragOptions = {
 export function useStripeDrag({
   design,
   onMoveStripe,
+  onStripeClick,
   canvasRef,
   isGestureActive = false,
 }: UseStripeDragOptions) {
@@ -161,16 +163,33 @@ export function useStripeDrag({
 
   const handlePointerUp = useCallback(
     (event: React.PointerEvent) => {
+      const pending = pendingDragRef.current;
+      const wasDragging = draggingStripeId !== null;
       const canvas = canvasRef.current;
-      if (draggingStripeId !== null && capturedPointerIdRef.current === event.pointerId && canvas) {
+
+      if (wasDragging && capturedPointerIdRef.current === event.pointerId && canvas) {
         canvas.releasePointerCapture(event.pointerId);
       }
+
+      if (
+        !wasDragging &&
+        pending &&
+        pending.pointerId === event.pointerId &&
+        onStripeClick
+      ) {
+        const dx = event.clientX - pending.clientX;
+        const dy = event.clientY - pending.clientY;
+        if (dx * dx + dy * dy < DRAG_THRESHOLD * DRAG_THRESHOLD) {
+          onStripeClick(pending.stripeId);
+        }
+      }
+
       setDraggingStripeId(null);
       dragOffsetRef.current = 0;
       capturedPointerIdRef.current = null;
       pendingDragRef.current = null;
     },
-    [canvasRef, draggingStripeId],
+    [canvasRef, draggingStripeId, onStripeClick],
   );
 
   const isDragging = draggingStripeId !== null;
