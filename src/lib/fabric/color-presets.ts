@@ -5,7 +5,7 @@ export type ColorPreset = {
 
 export const COLOR_PRESETS: ColorPreset[] = [
   { name: "Black", hex: "#2E2E2E" },
-  { name: "White", hex: "#E3E0DB" },
+  { name: "White", hex: "#F7F3ED" },
   { name: "Rafia", hex: "#BEAD8C" },
   { name: "Brown", hex: "#6E483E" },
   { name: "Red", hex: "#B62B3E" },

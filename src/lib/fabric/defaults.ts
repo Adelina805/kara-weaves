@@ -17,8 +17,8 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   weaveType: "plain",
   textilePreset: DEFAULT_TEXTILE_PRESET_ID,
   body: {
-    warpColor: "#E3E0DB",
-    weftColor: "#E3E0DB",
+    warpColor: "#F7F3ED",
+    weftColor: "#F7F3ED",
   },
   stripes: [],
   weave: {

@@ -1,10 +1,12 @@
 import {
   FABRIC_PRESETS,
-  TEXTILE_PRESET_OPTIONS,
+  CANVAS_SIZE_PRESETS,
+  buildTextilePresetId,
   formatSizeLabel,
+  type CanvasSizePresetId,
   type FabricDesign,
+  type FabricPresetId,
   type RulerUnit,
-  type TextilePresetId,
   resolveTextilePreset,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
@@ -19,63 +21,62 @@ type FabricSizeSelectProps = {
   onUnitChange: (unit: RulerUnit) => void;
 };
 
-const groupedTextilePresetOptions = FABRIC_PRESETS.map((fabric) => ({
-  label: fabric.label,
-  options: TEXTILE_PRESET_OPTIONS.map((option) => {
-    const preset = resolveTextilePreset(option.id);
-    return {
-      id: option.id,
-      fabricId: preset.fabricId,
-      sizeLabel: preset.sizeLabel,
-      sortArea: preset.canvasWidth * preset.canvasHeight,
-      sortWidth: preset.canvasWidth,
-      sortHeight: preset.canvasHeight,
-    };
-  })
-    .filter((option) => option.fabricId === fabric.id)
-    .sort(
-      (left, right) =>
-        left.sortArea - right.sortArea ||
-        left.sortWidth - right.sortWidth ||
-        left.sortHeight - right.sortHeight ||
-        left.sizeLabel.localeCompare(right.sizeLabel),
-    ),
-}));
+const sortedCanvasSizePresets = [...CANVAS_SIZE_PRESETS].sort(
+  (left, right) =>
+    left.widthPx * left.heightPx - right.widthPx * right.heightPx ||
+    left.widthPx - right.widthPx ||
+    left.heightPx - right.heightPx ||
+    left.label.localeCompare(right.label),
+);
 
 export function FabricSizeSelect({ design, dispatch, unit, onUnitChange }: FabricSizeSelectProps) {
+  const { fabricId, sizeId } = resolveTextilePreset(design.textilePreset);
+
   return (
     <Section
-      title="Fabric & Size"
+      title="Textile"
       action={<UnitSegment unit={unit} onChange={onUnitChange} />}
     >
-      <div className="mt-3">
+      <Field label="Fabric">
         <Select
-          value={design.textilePreset}
+          value={fabricId}
           onChange={(event) =>
             dispatch({
               type: "SET_TEXTILE_PRESET",
-              textilePreset: event.target.value as TextilePresetId,
+              textilePreset: buildTextilePresetId(
+                event.target.value as FabricPresetId,
+                sizeId,
+              ),
             })
           }
         >
-          {groupedTextilePresetOptions.map((group) => (
-            <optgroup
-              key={group.label}
-              label={group.label}
-              className="font-semibold text-stone-900"
-            >
-              {group.options.map((option) => {
-                const preset = resolveTextilePreset(option.id);
-                return (
-                  <option key={option.id} value={option.id}>
-                    {formatSizeLabel(preset.widthInches, preset.heightInches, unit)}
-                  </option>
-                );
-              })}
-            </optgroup>
+          {FABRIC_PRESETS.map((fabric) => (
+            <option key={fabric.id} value={fabric.id}>
+              {fabric.label}
+            </option>
           ))}
         </Select>
-      </div>
+      </Field>
+      <Field label="Size">
+        <Select
+          value={sizeId}
+          onChange={(event) =>
+            dispatch({
+              type: "SET_TEXTILE_PRESET",
+              textilePreset: buildTextilePresetId(
+                fabricId,
+                event.target.value as CanvasSizePresetId,
+              ),
+            })
+          }
+        >
+          {sortedCanvasSizePresets.map((size) => (
+            <option key={size.id} value={size.id}>
+              {formatSizeLabel(size.widthInches, size.heightInches, unit)}
+            </option>
+          ))}
+        </Select>
+      </Field>
     </Section>
   );
 }
