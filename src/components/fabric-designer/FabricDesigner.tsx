@@ -29,6 +29,8 @@ type FabricControlsProps = {
   onSelectStripe: (id: string) => void;
   onUnitChange: (unit: RulerUnit) => void;
   onRemoveStripe: (id: string) => void;
+  onStripeWidthSlideStart?: () => void;
+  onStripeWidthSlideEnd?: () => void;
 };
 
 export function FabricControls({
@@ -41,6 +43,8 @@ export function FabricControls({
   onSelectStripe,
   onUnitChange,
   onRemoveStripe,
+  onStripeWidthSlideStart,
+  onStripeWidthSlideEnd,
 }: FabricControlsProps) {
   return (
     <div className="p-4">
@@ -60,6 +64,8 @@ export function FabricControls({
         selectedStripeId={selectedStripeId}
         onSelectStripe={onSelectStripe}
         onRemoveStripe={onRemoveStripe}
+        onStripeWidthSlideStart={onStripeWidthSlideStart}
+        onStripeWidthSlideEnd={onStripeWidthSlideEnd}
       />
       <WeaveOutputControls design={design} dispatch={dispatch} />
       <LooseWeaveControls

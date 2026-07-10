@@ -20,6 +20,7 @@ export function FabricDesignerApp() {
   } = useFabricDesignState();
 
   const [selectedStripeId, setSelectedStripeId] = useState<string | null>(null);
+  const [isStripeWidthSliding, setIsStripeWidthSliding] = useState(false);
 
   const textilePreset = resolveTextilePreset(design.textilePreset);
   const { canvasWidth, canvasHeight } = textilePreset;
@@ -103,7 +104,7 @@ export function FabricDesignerApp() {
     [activeStripeBrush.orientation, handleCanvasPointerDown],
   );
 
-  useFabricRenderer(design, isDragging, canvasRef);
+  useFabricRenderer(design, isDragging || isStripeWidthSliding, canvasRef);
 
   useEffect(() => {
     resetZoom();
@@ -167,6 +168,8 @@ export function FabricDesignerApp() {
             onSelectStripe={handleSelectStripe}
             onUnitChange={(unit) => dispatch({ type: "SET_DISPLAY_UNIT", unit })}
             onRemoveStripe={handleRemoveStripe}
+            onStripeWidthSlideStart={() => setIsStripeWidthSliding(true)}
+            onStripeWidthSlideEnd={() => setIsStripeWidthSliding(false)}
           />
         </div>
       </aside>

@@ -21,6 +21,8 @@ type StripeControlsProps = {
   selectedStripeId: string | null;
   onSelectStripe: (id: string) => void;
   onRemoveStripe: (id: string) => void;
+  onStripeWidthSlideStart?: () => void;
+  onStripeWidthSlideEnd?: () => void;
 };
 
 function OrientationSegment({
@@ -68,6 +70,8 @@ export function StripeControls({
   selectedStripeId,
   onSelectStripe,
   onRemoveStripe,
+  onStripeWidthSlideStart,
+  onStripeWidthSlideEnd,
 }: StripeControlsProps) {
   const selectedStripe =
     selectedStripeId === null
@@ -117,6 +121,9 @@ export function StripeControls({
           value={displayWidth}
           valueLabel={formatDisplayValue(displayWidth, unit)}
           className="accent-stone-900"
+          onPointerDown={() => onStripeWidthSlideStart?.()}
+          onPointerUp={() => onStripeWidthSlideEnd?.()}
+          onPointerCancel={() => onStripeWidthSlideEnd?.()}
           onChange={(event) => {
             const width = displayUnitToPixels(Number(event.target.value), pixelsPerDisplayUnit);
             dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: width });
