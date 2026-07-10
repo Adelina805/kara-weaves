@@ -26,7 +26,17 @@ export function displayUnitToPixels(
 }
 
 export function formatDisplayValue(value: number, unit: RulerUnit): string {
-  return unit === "imperial" ? value.toFixed(2) : value.toFixed(1);
+  const decimals = unit === "imperial" ? 2 : 1;
+  const factor = 10 ** decimals;
+
+  // Pixel-to-display round-trips can land just off typed values (e.g. 5 -> 5.011).
+  // Snap to the nearest tenth when within tolerance so whole-number input displays cleanly.
+  const nearestTenth = Math.round(value * 10) / 10;
+  if (Math.abs(value - nearestTenth) < 0.02) {
+    return nearestTenth.toFixed(decimals);
+  }
+
+  return (Math.round(value * factor) / factor).toFixed(decimals);
 }
 
 export function getUnitSuffix(unit: RulerUnit): string {

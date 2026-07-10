@@ -1,5 +1,9 @@
-import type { ChangeEvent, InputHTMLAttributes, ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent, InputHTMLAttributes, KeyboardEvent, ReactNode } from "react";
 import { PresetColorPicker } from "@/components/ui/PresetColorPicker";
+
 
 type FieldProps = {
   label: ReactNode;
@@ -56,14 +60,72 @@ export function ColorInput({ id, value, onChange, className = "" }: ColorInputPr
 type RangeInputProps = InputHTMLAttributes<HTMLInputElement> & {
   valueLabel?: string | number;
   valueLabelPosition?: "inline" | "below";
+  editableValueLabel?: boolean;
 };
 
 export function RangeInput({
   valueLabel,
   valueLabelPosition = "inline",
+  editableValueLabel = false,
   className = "",
+  min = 0,
+  max = 100,
+  step,
+  onChange,
   ...props
 }: RangeInputProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState("");
+  const editInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing) {
+      editInputRef.current?.focus();
+      editInputRef.current?.select();
+    }
+  }, [isEditing]);
+
+  const labelClassName =
+    valueLabelPosition === "below"
+      ? "text-center text-xs tabular-nums text-stone-600"
+      : "w-7 shrink-0 text-center text-xs tabular-nums text-stone-600";
+
+  const startEditing = () => {
+    if (!editableValueLabel) {
+      return;
+    }
+    setDraft(String(valueLabel ?? ""));
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setDraft("");
+  };
+
+  const commitEditing = () => {
+    const parsed = parseFloat(draft);
+    if (Number.isNaN(parsed) || draft.trim() === "") {
+      cancelEditing();
+      return;
+    }
+
+    const clamped = Math.min(Number(max), Math.max(Number(min), parsed));
+    onChange?.({ target: { value: String(clamped) } } as ChangeEvent<HTMLInputElement>);
+    setIsEditing(false);
+    setDraft("");
+  };
+
+  const handleEditKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      commitEditing();
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      cancelEditing();
+    }
+  };
+
   return (
     <div
       className={
@@ -73,18 +135,52 @@ export function RangeInput({
       <input
         type="range"
         className={["w-full accent-black", className].join(" ")}
+        min={min}
+        max={max}
+        step={step}
+        onChange={onChange}
         {...props}
       />
       {valueLabel !== undefined ? (
-        <span
-          className={
-            valueLabelPosition === "below"
-              ? "text-center text-xs tabular-nums text-stone-600"
-              : "w-7 shrink-0 text-center text-xs tabular-nums text-stone-600"
-          }
-        >
-          {valueLabel}
-        </span>
+        isEditing ? (
+          <input
+            ref={editInputRef}
+            type="text"
+            inputMode="decimal"
+            value={draft}
+            className={[
+              "shrink-0 rounded border border-stone-300 bg-white px-1 py-0 text-center text-xs tabular-nums text-stone-900",
+              "focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-200",
+              valueLabelPosition === "below" ? "w-full" : "w-14",
+            ].join(" ")}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={commitEditing}
+            onKeyDown={handleEditKeyDown}
+          />
+        ) : (
+          <span
+            className={[
+              labelClassName,
+              editableValueLabel ? "cursor-text rounded hover:bg-stone-100" : "",
+            ].join(" ")}
+            title={editableValueLabel ? "Click to edit" : undefined}
+            onClick={startEditing}
+            onKeyDown={
+              editableValueLabel
+                ? (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      startEditing();
+                    }
+                  }
+                : undefined
+            }
+            role={editableValueLabel ? "button" : undefined}
+            tabIndex={editableValueLabel ? 0 : undefined}
+          >
+            {valueLabel}
+          </span>
+        )
       ) : null}
     </div>
   );

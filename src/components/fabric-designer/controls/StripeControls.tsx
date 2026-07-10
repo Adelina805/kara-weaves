@@ -115,6 +115,7 @@ export function StripeControls({
       </Field>
       <Field label={`Stripe Width (${getUnitSuffix(unit)})`}>
         <RangeInput
+          editableValueLabel
           min={pixelsToDisplayUnit(MIN_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
           max={pixelsToDisplayUnit(MAX_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
           step={1 / pixelsPerDisplayUnit}
