@@ -53,10 +53,6 @@ export function FabricDesignerApp() {
     setSelectedStripeId((current) => (current === id ? null : id));
   }, []);
 
-  const handleCanvasStripeClick = useCallback((id: string) => {
-    setSelectedStripeId(id);
-  }, []);
-
   const handleRemoveStripe = useCallback(
     (id: string) => {
       removeStripe(id);
@@ -74,7 +70,7 @@ export function FabricDesignerApp() {
   } = useStripeDrag({
     design,
     onMoveStripe: moveStripe,
-    onStripeClick: handleCanvasStripeClick,
+    onStripeClick: handleSelectStripe,
     canvasRef,
     isGestureActive: isViewportGestureActive,
   });
@@ -122,6 +118,25 @@ export function FabricDesignerApp() {
     }
   }, [design.stripes, selectedStripeId]);
 
+  useEffect(() => {
+    if (selectedStripeId === null) {
+      return;
+    }
+
+    const stripe = design.stripes.find((entry) => entry.id === selectedStripeId);
+    if (!stripe) {
+      return;
+    }
+
+    dispatch({
+      type: "SET_ACTIVE_STRIPE_COLOR",
+      color: stripe.orientation === "vertical" ? stripe.warpColor : stripe.weftColor,
+    });
+    dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: stripe.width });
+    // Sync brush from stripe only when selection changes, not on every stripe edit/drag.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- design.stripes read at selection time
+  }, [selectedStripeId, dispatch]);
+
   const handleDownload = () => {
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -162,6 +177,7 @@ export function FabricDesignerApp() {
           canvasWidth={canvasWidth}
           canvasHeight={canvasHeight}
           stripes={design.stripes}
+          selectedStripeId={selectedStripeId}
           activeStripeBrush={activeStripeBrush}
           hoverPosition={hoverPosition}
           fitScale={fitScale}

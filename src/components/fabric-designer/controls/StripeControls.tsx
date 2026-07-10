@@ -59,10 +59,6 @@ function OrientationSegment({
   );
 }
 
-function getStripeColor(stripe: FabricDesign["stripes"][number]): string {
-  return stripe.orientation === "vertical" ? stripe.warpColor : stripe.weftColor;
-}
-
 export function StripeControls({
   stripes,
   activeStripeBrush,
@@ -78,10 +74,7 @@ export function StripeControls({
       ? null
       : stripes.find((stripe) => stripe.id === selectedStripeId) ?? null;
 
-  const colorValue = selectedStripe ? getStripeColor(selectedStripe) : activeStripeBrush.color;
-  const widthPx = selectedStripe ? selectedStripe.width : activeStripeBrush.width;
-  const displayWidth = pixelsToDisplayUnit(widthPx, pixelsPerDisplayUnit);
-  const editingLabel = selectedStripe ? " (editing selected)" : "";
+  const displayWidth = pixelsToDisplayUnit(activeStripeBrush.width, pixelsPerDisplayUnit);
 
   return (
     <Section
@@ -104,23 +97,19 @@ export function StripeControls({
           }
         />
       </Field>
-      <Field label={`Stripe Color${editingLabel}`}>
+      <Field label="Stripe Color">
         <ColorInput
-          value={colorValue}
+          value={activeStripeBrush.color}
           onChange={(event) => {
+            const color = event.target.value;
+            dispatch({ type: "SET_ACTIVE_STRIPE_COLOR", color });
             if (selectedStripe) {
-              dispatch({
-                type: "UPDATE_STRIPE",
-                id: selectedStripe.id,
-                color: event.target.value,
-              });
-              return;
+              dispatch({ type: "UPDATE_STRIPE", id: selectedStripe.id, color });
             }
-            dispatch({ type: "SET_ACTIVE_STRIPE_COLOR", color: event.target.value });
           }}
         />
       </Field>
-      <Field label={`Stripe Width (${getUnitSuffix(unit)})${editingLabel}`}>
+      <Field label={`Stripe Width (${getUnitSuffix(unit)})`}>
         <RangeInput
           min={pixelsToDisplayUnit(MIN_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
           max={pixelsToDisplayUnit(MAX_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
@@ -130,11 +119,10 @@ export function StripeControls({
           className="accent-stone-900"
           onChange={(event) => {
             const width = displayUnitToPixels(Number(event.target.value), pixelsPerDisplayUnit);
+            dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: width });
             if (selectedStripe) {
               dispatch({ type: "UPDATE_STRIPE", id: selectedStripe.id, width });
-              return;
             }
-            dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: width });
           }}
         />
       </Field>

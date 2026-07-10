@@ -7,6 +7,7 @@ import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { CanvasToolbar } from "./CanvasToolbar";
 import { FabricRulers } from "./FabricRulers";
 import { StripeBrushPreview } from "./StripeBrushPreview";
+import { StripeSelectionOverlay } from "./StripeSelectionOverlay";
 import {
   BodyColorControls,
   FabricSizeSelect,
@@ -81,6 +82,7 @@ type FabricCanvasProps = {
   canvasWidth: number;
   canvasHeight: number;
   stripes: Stripe[];
+  selectedStripeId: string | null;
   activeStripeBrush: ActiveStripeBrush;
   hoverPosition: { x: number; y: number } | null;
   fitScale: number;
@@ -119,6 +121,7 @@ export function FabricCanvas({
   canvasWidth,
   canvasHeight,
   stripes,
+  selectedStripeId,
   activeStripeBrush,
   hoverPosition,
   fitScale,
@@ -152,6 +155,11 @@ export function FabricCanvas({
 }: FabricCanvasProps) {
   const displayWidth = canvasWidth * fitScale * zoom;
   const displayHeight = canvasHeight * fitScale * zoom;
+
+  const selectedStripe =
+    selectedStripeId === null
+      ? null
+      : stripes.find((stripe) => stripe.id === selectedStripeId) ?? null;
 
   const cursorClass = isPanning || isDragging
     ? "cursor-grabbing"
@@ -245,6 +253,11 @@ export function FabricCanvas({
             <StripeBrushPreview
               activeStripeBrush={activeStripeBrush}
               hoverPosition={hoverPosition}
+              canvasWidth={canvasWidth}
+              canvasHeight={canvasHeight}
+            />
+            <StripeSelectionOverlay
+              stripe={selectedStripe}
               canvasWidth={canvasWidth}
               canvasHeight={canvasHeight}
             />

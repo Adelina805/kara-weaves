@@ -13,6 +13,65 @@ body {
   font-family: var(--font-inconsolata), ui-monospace, monospace;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .marching-ants-box {
+    animation: none;
+  }
+}
+
+@keyframes marching-ants {
+  to {
+    background-position:
+      12px 0,
+      -12px 100%,
+      0 -12px,
+      100% 12px;
+  }
+}
+
+.marching-ants-box {
+  --marching-ants-color: #ffffff;
+  --marching-ants-dash: 6px;
+  --marching-ants-gap: 4px;
+  --marching-ants-thickness: 2px;
+
+  background:
+    repeating-linear-gradient(
+        90deg,
+        var(--marching-ants-color) 0,
+        var(--marching-ants-color) var(--marching-ants-dash),
+        transparent var(--marching-ants-dash),
+        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
+      )
+      0 0 / 100% var(--marching-ants-thickness) no-repeat,
+    repeating-linear-gradient(
+        90deg,
+        var(--marching-ants-color) 0,
+        var(--marching-ants-color) var(--marching-ants-dash),
+        transparent var(--marching-ants-dash),
+        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
+      )
+      0 100% / 100% var(--marching-ants-thickness) no-repeat,
+    repeating-linear-gradient(
+        0deg,
+        var(--marching-ants-color) 0,
+        var(--marching-ants-color) var(--marching-ants-dash),
+        transparent var(--marching-ants-dash),
+        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
+      )
+      0 0 / var(--marching-ants-thickness) 100% no-repeat,
+    repeating-linear-gradient(
+        0deg,
+        var(--marching-ants-color) 0,
+        var(--marching-ants-color) var(--marching-ants-dash),
+        transparent var(--marching-ants-dash),
+        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
+      )
+      100% 0 / var(--marching-ants-thickness) 100% no-repeat;
+  animation: marching-ants 1.2s linear infinite;
+}
+
 * {
   box-sizing: border-box;
 }
+
