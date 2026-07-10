@@ -33,8 +33,8 @@ function OrientationSegment({
   onChange: (orientation: StripeOrientation | null) => void;
 }) {
   const segments: { value: StripeOrientation; label: string }[] = [
-    { value: "horizontal", label: "Horizontal" },
     { value: "vertical", label: "Vertical" },
+    { value: "horizontal", label: "Horizontal" },
   ];
 
   return (
