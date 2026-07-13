@@ -15,7 +15,7 @@ export function LooseWeaveControls({ loose, dispatch, visible }: LooseWeaveContr
   }
 
   return (
-    <Section title="Loose Weave Settings">
+    <Section title="Loose Weave Settings" collapsible defaultCollapsed>
       <Field label="Loose weave openness">
         <RangeInput
           min={0}
@@ -69,7 +69,7 @@ export function WaffleWeaveControls({ waffle, dispatch, visible }: WaffleWeaveCo
   }
 
   return (
-    <Section title="Waffle Weave Settings">
+    <Section title="Waffle Weave Settings" collapsible defaultCollapsed>
       <Field label="Waffle cell size">
         <RangeInput
           min={4}

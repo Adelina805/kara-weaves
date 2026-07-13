@@ -1,15 +1,76 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useState, type ReactNode } from "react";
+import { InfoTooltip } from "@/components/ui/InfoTooltip";
 
 type SectionProps = {
   title: string;
+  info?: ReactNode;
+  action?: ReactNode;
   children: ReactNode;
+  collapsible?: boolean;
+  defaultCollapsed?: boolean;
 };
 
-export function Section({ title, children }: SectionProps) {
+function SectionChevron({ expanded }: { expanded: boolean }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={[
+        "h-4 w-4 shrink-0 text-stone-500 transition-transform",
+        expanded ? "rotate-90" : "",
+      ].join(" ")}
+      aria-hidden="true"
+    >
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  );
+}
+
+export function Section({
+  title,
+  info,
+  action,
+  children,
+  collapsible = false,
+  defaultCollapsed = false,
+}: SectionProps) {
+  const [expanded, setExpanded] = useState(!defaultCollapsed);
+
+  const titleContent = (
+    <>
+      {collapsible ? <SectionChevron expanded={expanded} /> : null}
+      <h3 className="text-sm font-bold uppercase tracking-wide text-stone-700">{title}</h3>
+      {info ? <InfoTooltip content={info} /> : null}
+    </>
+  );
+
   return (
     <section className="border-t border-stone-200 pt-4 mt-4 first:mt-0 first:border-t-0 first:pt-0">
-      <h3 className="text-sm font-bold uppercase tracking-wide text-stone-700">{title}</h3>
-      {children}
+      <div className="flex items-center justify-between gap-2">
+        {collapsible ? (
+          <button
+            type="button"
+            className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
+            aria-expanded={expanded}
+            onClick={() => setExpanded((current) => !current)}
+          >
+            {titleContent}
+          </button>
+        ) : (
+          <div className="flex items-center gap-1.5">{titleContent}</div>
+        )}
+        {action}
+      </div>
+      {!collapsible || expanded ? children : null}
     </section>
   );
 }
