@@ -2,22 +2,19 @@
 
 import { useCallback, useReducer } from "react";
 import {
-  clampStripePosition,
-  DEFAULT_ACTIVE_STRIPE_BRUSH,
   DEFAULT_FABRIC_DESIGN,
-  MAX_STRIPE_WIDTH_PX,
-  MIN_STRIPE_WIDTH_PX,
-  resolveTextilePreset,
-  type ActiveStripeBrush,
+  DEFAULT_NEW_STRIPE,
   type FabricDesign,
+  type NewStripeDraft,
+  type OutputSize,
   type Stripe,
   type StripeOrientation,
-  type TextilePresetId,
-  type RulerUnit,
+  type WeaveType,
 } from "@/lib/fabric";
 
 type FabricDesignAction =
-  | { type: "SET_TEXTILE_PRESET"; textilePreset: TextilePresetId }
+  | { type: "SET_WEAVE_TYPE"; weaveType: WeaveType }
+  | { type: "SET_OUTPUT_SIZE"; outputSize: OutputSize }
   | { type: "SET_BODY_WARP_COLOR"; color: string }
   | { type: "SET_BODY_WEFT_COLOR"; color: string }
   | { type: "SET_WARP_THICKNESS"; value: number }
@@ -28,14 +25,13 @@ type FabricDesignAction =
   | { type: "SET_WAFFLE_CELL_SCALE"; value: number }
   | { type: "SET_WAFFLE_DEPTH"; value: number }
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
-  | { type: "SET_DISPLAY_UNIT"; unit: RulerUnit }
-  | { type: "SET_ACTIVE_STRIPE_WIDTH"; value: number }
-  | { type: "SET_ACTIVE_STRIPE_COLOR"; color: string }
-  | { type: "SET_ACTIVE_STRIPE_ORIENTATION"; orientation: StripeOrientation | null }
-  | { type: "PLACE_STRIPE"; position: number }
+  | { type: "SET_PIXELS_PER_CM"; value: number }
+  | { type: "SET_NEW_STRIPE_WIDTH"; value: number }
+  | { type: "SET_NEW_STRIPE_WARP_COLOR"; color: string }
+  | { type: "SET_NEW_STRIPE_WEFT_COLOR"; color: string }
+  | { type: "ADD_STRIPE"; orientation: StripeOrientation }
   | { type: "REMOVE_STRIPE"; id: string }
   | { type: "MOVE_STRIPE"; id: string; position: number }
-  | { type: "UPDATE_STRIPE"; id: string; width?: number; color?: string }
   | { type: "RESET_DESIGN" };
 
 function createStripeId(): string {
@@ -43,21 +39,14 @@ function createStripeId(): string {
 }
 
 function fabricDesignReducer(
-  state: { design: FabricDesign; activeStripeBrush: ActiveStripeBrush },
+  state: { design: FabricDesign; newStripe: NewStripeDraft },
   action: FabricDesignAction,
-): { design: FabricDesign; activeStripeBrush: ActiveStripeBrush } {
+): { design: FabricDesign; newStripe: NewStripeDraft } {
   switch (action.type) {
-    case "SET_TEXTILE_PRESET": {
-      const resolved = resolveTextilePreset(action.textilePreset);
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          textilePreset: resolved.textilePreset,
-          weaveType: resolved.weaveType,
-        },
-      };
-    }
+    case "SET_WEAVE_TYPE":
+      return { ...state, design: { ...state.design, weaveType: action.weaveType } };
+    case "SET_OUTPUT_SIZE":
+      return { ...state, design: { ...state.design, outputSize: action.outputSize } };
     case "SET_BODY_WARP_COLOR":
       return {
         ...state,
@@ -147,42 +136,37 @@ function fabricDesignReducer(
           rulers: { ...state.design.rulers, enabled: action.enabled },
         },
       };
-    case "SET_DISPLAY_UNIT":
+    case "SET_PIXELS_PER_CM":
       return {
         ...state,
         design: {
           ...state.design,
-          rulers: { ...state.design.rulers, unit: action.unit },
+          rulers: { ...state.design.rulers, pixelsPerCm: action.value },
         },
       };
-    case "SET_ACTIVE_STRIPE_WIDTH":
+    case "SET_NEW_STRIPE_WIDTH":
       return {
         ...state,
-        activeStripeBrush: { ...state.activeStripeBrush, width: action.value },
+        newStripe: { ...state.newStripe, width: action.value },
       };
-    case "SET_ACTIVE_STRIPE_COLOR":
+    case "SET_NEW_STRIPE_WARP_COLOR":
       return {
         ...state,
-        activeStripeBrush: { ...state.activeStripeBrush, color: action.color },
+        newStripe: { ...state.newStripe, warpColor: action.color },
       };
-    case "SET_ACTIVE_STRIPE_ORIENTATION":
+    case "SET_NEW_STRIPE_WEFT_COLOR":
       return {
         ...state,
-        activeStripeBrush: { ...state.activeStripeBrush, orientation: action.orientation },
+        newStripe: { ...state.newStripe, weftColor: action.color },
       };
-    case "PLACE_STRIPE": {
-      const { orientation, width, color } = state.activeStripeBrush;
-      if (orientation === null) {
-        return state;
-      }
-      const isVertical = orientation === "vertical";
+    case "ADD_STRIPE": {
       const stripe: Stripe = {
         id: createStripeId(),
-        orientation,
-        position: action.position,
-        width,
-        warpColor: isVertical ? color : state.design.body.warpColor,
-        weftColor: isVertical ? state.design.body.weftColor : color,
+        orientation: action.orientation,
+        position: Math.floor(state.design.outputSize * 0.35),
+        width: state.newStripe.width,
+        warpColor: state.newStripe.warpColor,
+        weftColor: state.newStripe.weftColor,
       };
       return {
         ...state,
@@ -210,49 +194,10 @@ function fabricDesignReducer(
           ),
         },
       };
-    case "UPDATE_STRIPE": {
-      const stripe = state.design.stripes.find((entry) => entry.id === action.id);
-      if (!stripe) {
-        return state;
-      }
-
-      const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
-      const canvasSize = stripe.orientation === "vertical" ? canvasWidth : canvasHeight;
-      let updated = { ...stripe };
-
-      if (action.width !== undefined) {
-        const width = Math.max(
-          MIN_STRIPE_WIDTH_PX,
-          Math.min(MAX_STRIPE_WIDTH_PX, action.width),
-        );
-        updated = {
-          ...updated,
-          width,
-          position: clampStripePosition(updated.position, width, canvasSize),
-        };
-      }
-
-      if (action.color !== undefined) {
-        updated =
-          stripe.orientation === "vertical"
-            ? { ...updated, warpColor: action.color }
-            : { ...updated, weftColor: action.color };
-      }
-
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          stripes: state.design.stripes.map((entry) =>
-            entry.id === action.id ? updated : entry,
-          ),
-        },
-      };
-    }
     case "RESET_DESIGN":
       return {
         design: DEFAULT_FABRIC_DESIGN,
-        activeStripeBrush: DEFAULT_ACTIVE_STRIPE_BRUSH,
+        newStripe: DEFAULT_NEW_STRIPE,
       };
     default:
       return state;
@@ -261,14 +206,14 @@ function fabricDesignReducer(
 
 const initialState = {
   design: DEFAULT_FABRIC_DESIGN,
-  activeStripeBrush: DEFAULT_ACTIVE_STRIPE_BRUSH,
+  newStripe: DEFAULT_NEW_STRIPE,
 };
 
 export function useFabricDesignState() {
   const [state, dispatch] = useReducer(fabricDesignReducer, initialState);
 
-  const placeStripe = useCallback((position: number) => {
-    dispatch({ type: "PLACE_STRIPE", position });
+  const addStripe = useCallback((orientation: StripeOrientation) => {
+    dispatch({ type: "ADD_STRIPE", orientation });
   }, []);
 
   const removeStripe = useCallback((id: string) => {
@@ -281,9 +226,9 @@ export function useFabricDesignState() {
 
   return {
     design: state.design,
-    activeStripeBrush: state.activeStripeBrush,
+    newStripe: state.newStripe,
     dispatch,
-    placeStripe,
+    addStripe,
     removeStripe,
     moveStripe,
   };

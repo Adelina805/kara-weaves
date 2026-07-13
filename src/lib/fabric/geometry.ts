@@ -26,18 +26,6 @@ export function clampStripePosition(
   return Math.max(0, Math.min(canvasSize - stripeWidth, position));
 }
 
-export function computeCenteredStripePosition(
-  clickCoord: number,
-  stripeWidth: number,
-  canvasSize: number,
-): number {
-  return clampStripePosition(
-    Math.floor(clickCoord - stripeWidth / 2),
-    stripeWidth,
-    canvasSize,
-  );
-}
-
 export function getCanvasPointerPosition(
   canvas: HTMLCanvasElement,
   clientX: number,

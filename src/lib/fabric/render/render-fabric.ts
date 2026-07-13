@@ -1,6 +1,5 @@
 import { darken, hexToRgb } from "../color";
 import { rectIntersection } from "../geometry";
-import { resolveTextilePreset } from "../textile-presets";
 import type {
   ColorBand,
   FabricDesign,
@@ -10,6 +9,7 @@ import type {
 } from "../types";
 import { createWeavePattern } from "../weaves/create-weave-pattern";
 import { applyGlobalSoftness } from "./apply-softness";
+import { drawRulers } from "./draw-rulers";
 import { fillPatternRect } from "./fill-pattern";
 
 function buildWeaveParams(
@@ -50,12 +50,12 @@ export function renderFabric(
     return;
   }
 
-  const { canvasWidth, canvasHeight } = resolveTextilePreset(design.textilePreset);
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
+  const size = design.outputSize;
+  canvas.width = size;
+  canvas.height = size;
 
-  const width = canvasWidth;
-  const height = canvasHeight;
+  const width = size;
+  const height = size;
 
   const { textureAmount, softness, intersectionDarkness } = defaults;
 
@@ -71,15 +71,18 @@ export function renderFabric(
   fillPatternRect(ctx, bodyPattern, { x: 0, y: 0, w: width, h: height });
 
   for (const stripe of design.stripes) {
+    const stripeWarp = hexToRgb(stripe.warpColor);
+    const stripeWeft = hexToRgb(stripe.weftColor);
+
+    const stripePattern = createPatternForColors(
+      ctx,
+      design,
+      stripeWarp,
+      stripeWeft,
+      textureAmount,
+    );
+
     if (stripe.orientation === "vertical") {
-      const stripeWarp = hexToRgb(stripe.warpColor);
-      const stripePattern = createPatternForColors(
-        ctx,
-        design,
-        stripeWarp,
-        bodyWeft,
-        textureAmount,
-      );
       const rect = {
         x: stripe.position,
         y: 0,
@@ -87,16 +90,8 @@ export function renderFabric(
         h: height,
       };
       fillPatternRect(ctx, stripePattern, rect);
-      verticalBands.push({ rect, vertical: stripeWarp, horizontal: bodyWeft });
+      verticalBands.push({ rect, vertical: stripeWarp, horizontal: stripeWeft });
     } else {
-      const stripeWeft = hexToRgb(stripe.weftColor);
-      const stripePattern = createPatternForColors(
-        ctx,
-        design,
-        bodyWarp,
-        stripeWeft,
-        textureAmount,
-      );
       const rect = {
         x: 0,
         y: stripe.position,
@@ -104,7 +99,7 @@ export function renderFabric(
         h: stripe.width,
       };
       fillPatternRect(ctx, stripePattern, rect);
-      horizontalBands.push({ rect, vertical: bodyWarp, horizontal: stripeWeft });
+      horizontalBands.push({ rect, vertical: stripeWarp, horizontal: stripeWeft });
     }
   }
 
@@ -130,4 +125,5 @@ export function renderFabric(
   }
 
   applyGlobalSoftness(ctx, width, height, softness * 0.7);
+  drawRulers(ctx, width, height, design.rulers);
 }

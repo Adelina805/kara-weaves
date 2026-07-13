@@ -2,7 +2,7 @@ import { FabricDesignerApp } from "@/components/fabric-designer/FabricDesignerAp
 
 export default function HomePage() {
   return (
-    <main className="h-screen overflow-y-auto md:overflow-hidden">
+    <main className="h-screen overflow-hidden">
       <FabricDesignerApp />
     </main>
   );
