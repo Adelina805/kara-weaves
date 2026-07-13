@@ -128,7 +128,7 @@ type WeaveOutputControlsProps = {
 
 export function WeaveOutputControls({ design, dispatch }: WeaveOutputControlsProps) {
   return (
-    <Section title="Weave / Output Constraints">
+    <Section title="Weave / Output Constraints" collapsible defaultCollapsed>
       <Field label="Vertical weave thickness / warp thickness">
         <input
           type="range"
