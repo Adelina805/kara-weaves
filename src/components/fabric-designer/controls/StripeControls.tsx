@@ -1,16 +1,21 @@
 import type { ActiveStripeBrush, FabricDesign, StripeOrientation, RulerUnit } from "@/lib/fabric";
 import {
-  displayUnitToPixels,
-  formatDisplayValue,
   getUnitSuffix,
-  MAX_STRIPE_WIDTH_PX,
-  MIN_STRIPE_WIDTH_PX,
+  INCHES_TO_CM,
+  MAX_STRIPE_WIDTH_INCHES,
+  MIN_STRIPE_WIDTH_INCHES,
   pixelsToDisplayUnit,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
 import { ColorInput, Field, RangeInput } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 import { StripeList } from "./StripeList";
+
+const STRIPE_WIDTH_STEP = 0.1;
+
+function snapToTenth(value: number): number {
+  return Math.round(value * 10) / 10;
+}
 
 type StripeControlsProps = {
   stripes: FabricDesign["stripes"];
@@ -78,7 +83,19 @@ export function StripeControls({
       ? null
       : stripes.find((stripe) => stripe.id === selectedStripeId) ?? null;
 
-  const displayWidth = pixelsToDisplayUnit(activeStripeBrush.width, pixelsPerDisplayUnit);
+  const displayUnitsPerInch = unit === "imperial" ? 1 : INCHES_TO_CM;
+  const minDisplayWidth = snapToTenth(MIN_STRIPE_WIDTH_INCHES * displayUnitsPerInch);
+  const maxDisplayWidth = snapToTenth(MAX_STRIPE_WIDTH_INCHES * displayUnitsPerInch);
+  const pixelsPerInch = pixelsPerDisplayUnit * displayUnitsPerInch;
+  const minWidthPixels = MIN_STRIPE_WIDTH_INCHES * pixelsPerInch;
+  const maxWidthPixels = MAX_STRIPE_WIDTH_INCHES * pixelsPerInch;
+  const displayWidth = Math.min(
+    maxDisplayWidth,
+    Math.max(
+      minDisplayWidth,
+      snapToTenth(pixelsToDisplayUnit(activeStripeBrush.width, pixelsPerDisplayUnit)),
+    ),
+  );
 
   return (
     <Section
@@ -118,17 +135,21 @@ export function StripeControls({
       <Field label={`Stripe Width (${getUnitSuffix(unit)})`}>
         <RangeInput
           editableValueLabel
-          min={pixelsToDisplayUnit(MIN_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
-          max={pixelsToDisplayUnit(MAX_STRIPE_WIDTH_PX, pixelsPerDisplayUnit)}
-          step={1 / pixelsPerDisplayUnit}
+          min={minDisplayWidth}
+          max={maxDisplayWidth}
+          step={STRIPE_WIDTH_STEP}
           value={displayWidth}
-          valueLabel={formatDisplayValue(displayWidth, unit)}
+          valueLabel={displayWidth.toFixed(1)}
           className="accent-stone-900"
           onPointerDown={() => onStripeWidthSlideStart?.()}
           onPointerUp={() => onStripeWidthSlideEnd?.()}
           onPointerCancel={() => onStripeWidthSlideEnd?.()}
           onChange={(event) => {
-            const width = displayUnitToPixels(Number(event.target.value), pixelsPerDisplayUnit);
+            const snappedDisplayWidth = snapToTenth(Number(event.target.value));
+            const width = Math.min(
+              maxWidthPixels,
+              Math.max(minWidthPixels, snappedDisplayWidth * pixelsPerDisplayUnit),
+            );
             dispatch({ type: "SET_ACTIVE_STRIPE_WIDTH", value: width });
             if (selectedStripe) {
               dispatch({ type: "UPDATE_STRIPE", id: selectedStripe.id, width });

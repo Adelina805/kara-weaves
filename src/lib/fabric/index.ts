@@ -21,7 +21,11 @@ export {
 export { fillPatternRect } from "./render/fill-pattern";
 export { renderFabric } from "./render/render-fabric";
 export { findStripeAtPoint, type StripeHit } from "./stripes/hit-test";
-export { MIN_STRIPE_WIDTH_PX, MAX_STRIPE_WIDTH_PX } from "./stripe-limits";
+export {
+  getStripeWidthLimitsPx,
+  MIN_STRIPE_WIDTH_INCHES,
+  MAX_STRIPE_WIDTH_INCHES,
+} from "./stripe-limits";
 export {
   CANVAS_SIZE_PRESETS,
   DEFAULT_TEXTILE_PRESET_ID,

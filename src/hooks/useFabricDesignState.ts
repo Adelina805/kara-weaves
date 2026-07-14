@@ -5,11 +5,12 @@ import {
   clampStripePosition,
   DEFAULT_ACTIVE_STRIPE_BRUSH,
   DEFAULT_FABRIC_DESIGN,
-  MAX_STRIPE_WIDTH_PX,
-  MIN_STRIPE_WIDTH_PX,
+  getStripeWidthLimitsPx,
+  getTextilePixelsPerInch,
   resolveTextilePreset,
   type ActiveStripeBrush,
   type FabricDesign,
+  type ResolvedTextilePreset,
   type Stripe,
   type StripeOrientation,
   type TextilePresetId,
@@ -42,19 +43,59 @@ function createStripeId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function clampStripeWidth(width: number, textilePreset: TextilePresetId): number {
+  const { min, max } = getStripeWidthLimitsPx(resolveTextilePreset(textilePreset));
+  return Math.max(min, Math.min(max, width));
+}
+
+/** Keep physical inch size when canvas PPI changes between textile presets. */
+function rescalePixelsForPreset(
+  pixels: number,
+  from: ResolvedTextilePreset,
+  to: ResolvedTextilePreset,
+): number {
+  const fromPpi = getTextilePixelsPerInch(from);
+  const toPpi = getTextilePixelsPerInch(to);
+  return (pixels / fromPpi) * toPpi;
+}
+
 function fabricDesignReducer(
   state: { design: FabricDesign; activeStripeBrush: ActiveStripeBrush },
   action: FabricDesignAction,
 ): { design: FabricDesign; activeStripeBrush: ActiveStripeBrush } {
   switch (action.type) {
     case "SET_TEXTILE_PRESET": {
+      const previous = resolveTextilePreset(state.design.textilePreset);
       const resolved = resolveTextilePreset(action.textilePreset);
+      const width = clampStripeWidth(
+        rescalePixelsForPreset(state.activeStripeBrush.width, previous, resolved),
+        resolved.textilePreset,
+      );
+
       return {
         ...state,
         design: {
           ...state.design,
           textilePreset: resolved.textilePreset,
           weaveType: resolved.weaveType,
+          stripes: state.design.stripes.map((stripe) => {
+            const nextWidth = clampStripeWidth(
+              rescalePixelsForPreset(stripe.width, previous, resolved),
+              resolved.textilePreset,
+            );
+            const canvasSize =
+              stripe.orientation === "vertical" ? resolved.canvasWidth : resolved.canvasHeight;
+            const nextPosition = clampStripePosition(
+              rescalePixelsForPreset(stripe.position, previous, resolved),
+              nextWidth,
+              canvasSize,
+            );
+            return { ...stripe, width: nextWidth, position: nextPosition };
+          }),
+        },
+        activeStripeBrush: {
+          ...state.activeStripeBrush,
+          width,
         },
       };
     }
@@ -158,7 +199,10 @@ function fabricDesignReducer(
     case "SET_ACTIVE_STRIPE_WIDTH":
       return {
         ...state,
-        activeStripeBrush: { ...state.activeStripeBrush, width: action.value },
+        activeStripeBrush: {
+          ...state.activeStripeBrush,
+          width: clampStripeWidth(action.value, state.design.textilePreset),
+        },
       };
     case "SET_ACTIVE_STRIPE_COLOR":
       return {
@@ -171,10 +215,14 @@ function fabricDesignReducer(
         activeStripeBrush: { ...state.activeStripeBrush, orientation: action.orientation },
       };
     case "PLACE_STRIPE": {
-      const { orientation, width, color } = state.activeStripeBrush;
+      const { orientation, color } = state.activeStripeBrush;
       if (orientation === null) {
         return state;
       }
+      const width = clampStripeWidth(
+        state.activeStripeBrush.width,
+        state.design.textilePreset,
+      );
       const isVertical = orientation === "vertical";
       const stripe: Stripe = {
         id: createStripeId(),
@@ -216,15 +264,14 @@ function fabricDesignReducer(
         return state;
       }
 
-      const { canvasWidth, canvasHeight } = resolveTextilePreset(state.design.textilePreset);
+      const resolved = resolveTextilePreset(state.design.textilePreset);
+      const { canvasWidth, canvasHeight } = resolved;
       const canvasSize = stripe.orientation === "vertical" ? canvasWidth : canvasHeight;
       let updated = { ...stripe };
 
       if (action.width !== undefined) {
-        const width = Math.max(
-          MIN_STRIPE_WIDTH_PX,
-          Math.min(MAX_STRIPE_WIDTH_PX, action.width),
-        );
+        const { min, max } = getStripeWidthLimitsPx(resolved);
+        const width = Math.max(min, Math.min(max, action.width));
         updated = {
           ...updated,
           width,
