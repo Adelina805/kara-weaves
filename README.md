@@ -2,15 +2,9 @@
 
 Textile pattern designer MVP — a Next.js port of the original Colab/Gradio fabric generator.
 
-## Features
-
-- **Three weave types:** plain, waffle, and loose (gauze)
-- **Layered composition:** body fill, borders, custom stripes, intersection blending
-- **Interactive stripes:** add vertical/horizontal bands and drag them on the canvas
-- **Export:** download PNG previews
-- **Centimeter rulers:** optional overlay for scale reference
-
 Rendering runs entirely in the browser via Canvas 2D. Weave simulation logic lives in pure TypeScript under `src/lib/fabric/` with no React dependencies.
+
+See [CONTEXT.md](CONTEXT.md) for the project background, goals, and MVP priorities.
 
 ## Getting started
 
