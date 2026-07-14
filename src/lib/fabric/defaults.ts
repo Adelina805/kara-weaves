@@ -8,7 +8,7 @@ export const RENDER_DEFAULTS: RenderDefaults = {
 };
 
 export const DEFAULT_ACTIVE_STRIPE_BRUSH: ActiveStripeBrush = {
-  orientation: "horizontal",
+  orientation: null,
   width: 55,
   color: "#D573A0",
 };

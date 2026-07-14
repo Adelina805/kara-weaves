@@ -53,9 +53,14 @@ function pointerDistance(
 type UseCanvasViewportOptions = {
   canvasWidth: number;
   canvasHeight: number;
+  rulersEnabled: boolean;
 };
 
-export function useCanvasViewport({ canvasWidth, canvasHeight }: UseCanvasViewportOptions) {
+export function useCanvasViewport({
+  canvasWidth,
+  canvasHeight,
+  rulersEnabled,
+}: UseCanvasViewportOptions) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
   const [fitScale, setFitScale] = useState(1);
@@ -73,6 +78,9 @@ export function useCanvasViewport({ canvasWidth, canvasHeight }: UseCanvasViewpo
 
   const fitScaleRef = useRef(fitScale);
   fitScaleRef.current = fitScale;
+
+  const rulersEnabledRef = useRef(rulersEnabled);
+  rulersEnabledRef.current = rulersEnabled;
 
   const spaceKeyRef = useRef(false);
   const panStartRef = useRef({ panX: 0, panY: 0, clientX: 0, clientY: 0 });
@@ -120,9 +128,11 @@ export function useCanvasViewport({ canvasWidth, canvasHeight }: UseCanvasViewpo
     const availableHeight = container.clientHeight - padY;
     const displayWidth = canvasWidth * fitScaleRef.current * zoomRef.current;
     const displayHeight = canvasHeight * fitScaleRef.current * zoomRef.current;
+    const offset = rulersEnabledRef.current ? RULER_OFFSET : 0;
 
-    const nextPanX = padX / 2 + (availableWidth - displayWidth) / 2;
-    const nextPanY = padY / 2 + (availableHeight - displayHeight) / 2;
+    // Center visible rulers with the canvas without reacting to visibility toggles.
+    const nextPanX = padX / 2 + (availableWidth - displayWidth + offset) / 2;
+    const nextPanY = padY / 2 + (availableHeight - displayHeight + offset) / 2;
 
     applyPan(nextPanX, nextPanY);
   }, [applyPan, canvasWidth, canvasHeight]);

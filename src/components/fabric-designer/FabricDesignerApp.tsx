@@ -46,7 +46,11 @@ export function FabricDesignerApp() {
     handlePanStart: handleViewportPanStart,
     handlePointerMove: handleViewportPointerMove,
     handlePointerUp: handleViewportPointerUp,
-  } = useCanvasViewport({ canvasWidth, canvasHeight });
+  } = useCanvasViewport({
+    canvasWidth,
+    canvasHeight,
+    rulersEnabled: design.rulers.enabled,
+  });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
