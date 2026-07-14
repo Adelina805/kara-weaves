@@ -45,28 +45,32 @@ export function Section({
 }: SectionProps) {
   const [expanded, setExpanded] = useState(!defaultCollapsed);
 
-  const titleContent = (
-    <>
-      {collapsible ? <SectionChevron expanded={expanded} /> : null}
-      <h3 className="text-sm font-bold uppercase tracking-wide text-stone-700">{title}</h3>
-      {info ? <InfoTooltip content={info} /> : null}
-    </>
+  const titleHeading = (
+    <h3 className="text-sm font-bold uppercase tracking-wide text-stone-700">{title}</h3>
   );
+  const infoTooltip = info ? <InfoTooltip content={info} /> : null;
 
   return (
     <section className="border-t border-stone-200 pt-4 mt-4 first:mt-0 first:border-t-0 first:pt-0">
       <div className="flex items-center justify-between gap-2">
         {collapsible ? (
-          <button
-            type="button"
-            className="flex min-w-0 flex-1 items-center gap-1.5 text-left"
-            aria-expanded={expanded}
-            onClick={() => setExpanded((current) => !current)}
-          >
-            {titleContent}
-          </button>
+          <div className="flex min-w-0 flex-1 items-center gap-1.5">
+            <button
+              type="button"
+              className="flex min-w-0 items-center gap-1.5 text-left"
+              aria-expanded={expanded}
+              onClick={() => setExpanded((current) => !current)}
+            >
+              <SectionChevron expanded={expanded} />
+              {titleHeading}
+            </button>
+            {infoTooltip}
+          </div>
         ) : (
-          <div className="flex items-center gap-1.5">{titleContent}</div>
+          <div className="flex items-center gap-1.5">
+            {titleHeading}
+            {infoTooltip}
+          </div>
         )}
         {action}
       </div>

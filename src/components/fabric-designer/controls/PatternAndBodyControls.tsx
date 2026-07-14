@@ -36,6 +36,7 @@ export function FabricSizeSelect({ design, dispatch, unit, onUnitChange }: Fabri
     <Section
       title="Textile"
       action={<UnitSegment unit={unit} onChange={onUnitChange} />}
+      collapsible
     >
       <Field label="Fabric">
         <Select
@@ -88,7 +89,7 @@ type BodyColorControlsProps = {
 
 export function BodyColorControls({ body, dispatch }: BodyColorControlsProps) {
   return (
-    <Section title="Body Color">
+    <Section title="Body Color" collapsible defaultCollapsed>
       <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1.5">
         <label
           htmlFor="body-warp-color"

@@ -92,6 +92,8 @@ export function StripeControls({
           - Select a stripe to change color or width.
         </>
       }
+      collapsible
+      defaultCollapsed
     >
       <Field label="Orientation">
         <OrientationSegment
