@@ -1,6 +1,10 @@
-export type WeaveType = "plain" | "waffle" | "loose";
+export type WeaveType = "plain" | "waffle" | "loose" | "thorthu" | "dobb";
 
-export type OutputSize = 512 | 768 | 1024 | 1536;
+export type FabricPresetId = "plain" | "loose" | "waffle" | "thorthu" | "dobb";
+
+export type CanvasSizePresetId = "12x12" | "14x21" | "20x20" | "18x28" | "40x70";
+
+export type TextilePresetId = `${FabricPresetId}-${CanvasSizePresetId}`;
 
 export type StripeOrientation = "vertical" | "horizontal";
 
@@ -50,14 +54,16 @@ export type WeaveSettings = {
   waffle: WaffleWeaveParams;
 };
 
+export type RulerUnit = "metric" | "imperial";
+
 export type RulerSettings = {
   enabled: boolean;
-  pixelsPerCm: number;
+  unit: RulerUnit;
 };
 
 export type FabricDesign = {
   weaveType: WeaveType;
-  outputSize: OutputSize;
+  textilePreset: TextilePresetId;
   body: {
     warpColor: string;
     weftColor: string;
@@ -84,8 +90,8 @@ export type WeavePatternParams = {
   waffle: WaffleWeaveParams;
 };
 
-export type NewStripeDraft = {
+export type ActiveStripeBrush = {
+  orientation: StripeOrientation | null;
   width: number;
-  warpColor: string;
-  weftColor: string;
+  color: string;
 };
