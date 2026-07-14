@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, type RefObject } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   RENDER_DEBOUNCE_MS,
   RENDER_DEFAULTS,
@@ -8,13 +8,8 @@ import {
   type FabricDesign,
 } from "@/lib/fabric";
 
-export function useFabricRenderer(
-  design: FabricDesign,
-  immediate = false,
-  externalCanvasRef?: RefObject<HTMLCanvasElement | null>,
-) {
-  const internalCanvasRef = useRef<HTMLCanvasElement>(null);
-  const canvasRef = externalCanvasRef ?? internalCanvasRef;
+export function useFabricRenderer(design: FabricDesign, immediate = false) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const renderNow = useCallback(() => {
@@ -23,7 +18,7 @@ export function useFabricRenderer(
       return;
     }
     renderFabric(canvas, design, RENDER_DEFAULTS);
-  }, [canvasRef, design]);
+  }, [design]);
 
   useEffect(() => {
     if (immediate) {

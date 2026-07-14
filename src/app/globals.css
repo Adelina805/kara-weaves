@@ -13,65 +13,82 @@ body {
   font-family: var(--font-inconsolata), ui-monospace, monospace;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .marching-ants-box {
-    animation: none;
-  }
-}
-
-@keyframes marching-ants {
-  to {
-    background-position:
-      12px 0,
-      -12px 100%,
-      0 -12px,
-      100% 12px;
-  }
-}
-
-.marching-ants-box {
-  --marching-ants-color: #ffffff;
-  --marching-ants-dash: 6px;
-  --marching-ants-gap: 4px;
-  --marching-ants-thickness: 2px;
-
-  background:
-    repeating-linear-gradient(
-        90deg,
-        var(--marching-ants-color) 0,
-        var(--marching-ants-color) var(--marching-ants-dash),
-        transparent var(--marching-ants-dash),
-        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
-      )
-      0 0 / 100% var(--marching-ants-thickness) no-repeat,
-    repeating-linear-gradient(
-        90deg,
-        var(--marching-ants-color) 0,
-        var(--marching-ants-color) var(--marching-ants-dash),
-        transparent var(--marching-ants-dash),
-        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
-      )
-      0 100% / 100% var(--marching-ants-thickness) no-repeat,
-    repeating-linear-gradient(
-        0deg,
-        var(--marching-ants-color) 0,
-        var(--marching-ants-color) var(--marching-ants-dash),
-        transparent var(--marching-ants-dash),
-        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
-      )
-      0 0 / var(--marching-ants-thickness) 100% no-repeat,
-    repeating-linear-gradient(
-        0deg,
-        var(--marching-ants-color) 0,
-        var(--marching-ants-color) var(--marching-ants-dash),
-        transparent var(--marching-ants-dash),
-        transparent calc(var(--marching-ants-dash) + var(--marching-ants-gap))
-      )
-      100% 0 / var(--marching-ants-thickness) 100% no-repeat;
-  animation: marching-ants 1.2s linear infinite;
-}
-
 * {
   box-sizing: border-box;
 }
 
+.artisan-print-portal {
+  display: none;
+}
+
+.artisan-print-mockup svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  body.printing-artisan-card > :not(.artisan-print-portal) {
+    display: none !important;
+  }
+
+  body.printing-artisan-card .artisan-print-portal {
+    display: block !important;
+  }
+
+  body.printing-artisan-card .artisan-print-portal > * {
+    display: block !important;
+  }
+
+  body.printing-artisan-card .artisan-print-card {
+    width: 190mm !important;
+    max-width: 190mm !important;
+    min-height: auto !important;
+    margin: 0 auto !important;
+    padding: 8mm !important;
+    border: 1px solid #d6d3d1 !important;
+    border-radius: 10mm !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    background: #ffffff !important;
+    color: #111827 !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body.printing-artisan-card .artisan-print-card * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body.printing-artisan-card .artisan-print-card h1 {
+    font-size: 22pt !important;
+    line-height: 1.05 !important;
+  }
+
+  body.printing-artisan-card .artisan-print-card table {
+    font-size: 8pt !important;
+  }
+
+  body.printing-artisan-card .artisan-print-card .artisan-print-mockup svg {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 72mm !important;
+  }
+
+  body.printing-artisan-card button,
+  body.printing-artisan-card a {
+    display: none !important;
+  }
+}

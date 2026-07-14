@@ -1,5 +1,4 @@
-import { DEFAULT_TEXTILE_PRESET_ID } from "./textile-presets";
-import type { ActiveStripeBrush, FabricDesign, RenderDefaults } from "./types";
+import type { FabricDesign, NewStripeDraft, RenderDefaults } from "./types";
 
 export const RENDER_DEFAULTS: RenderDefaults = {
   textureAmount: 0.85,
@@ -7,18 +6,20 @@ export const RENDER_DEFAULTS: RenderDefaults = {
   intersectionDarkness: 0.4,
 };
 
-export const DEFAULT_ACTIVE_STRIPE_BRUSH: ActiveStripeBrush = {
-  orientation: "horizontal",
+export const OUTPUT_SIZE_OPTIONS = [512, 768, 1024, 1536] as const;
+
+export const DEFAULT_NEW_STRIPE: NewStripeDraft = {
   width: 55,
-  color: "#D573A0",
+  warpColor: "#d94893",
+  weftColor: "#f0a4cf",
 };
 
 export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
-  weaveType: "plain",
-  textilePreset: DEFAULT_TEXTILE_PRESET_ID,
+  weaveType: "loose",
+  outputSize: 768,
   body: {
-    warpColor: "#F7F3ED",
-    weftColor: "#F7F3ED",
+    warpColor: "#e8e4d8",
+    weftColor: "#f7f5ee",
   },
   stripes: [],
   weave: {
@@ -36,7 +37,7 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   },
   rulers: {
     enabled: false,
-    unit: "imperial",
+    pixelsPerCm: 40,
   },
 };
 

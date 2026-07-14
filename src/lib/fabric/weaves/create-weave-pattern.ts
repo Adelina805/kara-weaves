@@ -1,8 +1,6 @@
 import type { WeavePatternParams } from "../types";
-import { createDobbTexturePattern } from "./dobb-texture";
 import { createLooseWeavePattern } from "./loose-weave";
 import { createPlainWeavePattern } from "./plain-weave";
-import { createThorthuCottonPattern } from "./thorthu-cotton";
 import { createWaffleWeavePattern } from "./waffle-weave";
 
 export function createWeavePattern(
@@ -40,24 +38,6 @@ export function createWeavePattern(
         weftThickness,
         textureAmount,
         loose,
-      );
-    case "thorthu":
-      return createThorthuCottonPattern(
-        ctx,
-        warpColor,
-        weftColor,
-        warpThickness,
-        weftThickness,
-        textureAmount,
-      );
-    case "dobb":
-      return createDobbTexturePattern(
-        ctx,
-        warpColor,
-        weftColor,
-        warpThickness,
-        weftThickness,
-        textureAmount,
       );
     case "plain":
     default:
