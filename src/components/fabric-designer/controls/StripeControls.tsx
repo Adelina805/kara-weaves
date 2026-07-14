@@ -7,7 +7,8 @@ import {
   pixelsToDisplayUnit,
 } from "@/lib/fabric";
 import type { FabricDesignDispatch } from "@/hooks/useFabricDesignState";
-import { ColorInput, Field, RangeInput } from "@/components/ui/Field";
+import { ColorPickerField } from "@/components/ui/ColorPickerField";
+import { Field, RangeInput } from "@/components/ui/Field";
 import { Section } from "@/components/ui/Section";
 import { StripeList } from "./StripeList";
 
@@ -120,18 +121,17 @@ export function StripeControls({
           }
         />
       </Field>
-      <Field label="Stripe Color">
-        <ColorInput
-          value={activeStripeBrush.color}
-          onChange={(event) => {
-            const color = event.target.value;
-            dispatch({ type: "SET_ACTIVE_STRIPE_COLOR", color });
-            if (selectedStripe) {
-              dispatch({ type: "UPDATE_STRIPE", id: selectedStripe.id, color });
-            }
-          }}
-        />
-      </Field>
+      <ColorPickerField
+        className="mt-3"
+        label="Stripe Color"
+        value={activeStripeBrush.color}
+        onChange={(color) => {
+          dispatch({ type: "SET_ACTIVE_STRIPE_COLOR", color });
+          if (selectedStripe) {
+            dispatch({ type: "UPDATE_STRIPE", id: selectedStripe.id, color });
+          }
+        }}
+      />
       <Field label={`Stripe Width (${getUnitSuffix(unit)})`}>
         <RangeInput
           editableValueLabel

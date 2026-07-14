@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, InputHTMLAttributes, KeyboardEvent, ReactNode } from "react";
-import { PresetColorPicker } from "@/components/ui/PresetColorPicker";
-
 
 type FieldProps = {
   label: ReactNode;
@@ -51,26 +49,6 @@ export function Select({ className = "", ...props }: SelectProps) {
         <path d="m6 9 6 6 6-6" />
       </svg>
     </div>
-  );
-}
-
-type ColorInputProps = {
-  id?: string;
-  value: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  className?: string;
-};
-
-export function ColorInput({ id, value, onChange, className = "" }: ColorInputProps) {
-  return (
-    <PresetColorPicker
-      id={id}
-      value={value}
-      className={className}
-      onChange={(hex) =>
-        onChange?.({ target: { value: hex } } as ChangeEvent<HTMLInputElement>)
-      }
-    />
   );
 }
 
