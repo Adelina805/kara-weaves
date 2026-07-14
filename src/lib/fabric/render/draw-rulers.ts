@@ -3,7 +3,7 @@ import type { RulerUnit } from "../types";
 
 const RULER_BG = "rgba(250, 250, 245, 0.96)";
 const RULER_CORNER_BG = "rgba(235, 235, 225, 0.96)";
-const RULER_INK = "rgba(20, 20, 20, 0.85)";
+const RULER_INK = "rgba(20, 20, 20, 0.3)";
 const RULER_LABEL = "rgba(20, 20, 20, 0.90)";
 
 const MIN_TICK_SPACING_PX = 6;
@@ -133,15 +133,12 @@ function drawTicks(
       if (isMajor) {
         const majorNumber = Math.round(position / pixelsPerMajorUnit);
         if (majorNumber % labelEvery === 0) {
-          if (majorNumber === 0) {
-            ctx.fillText("0", 6, 6);
-          } else {
-            ctx.save();
-            ctx.translate(rulerSize * 0.58, aligned + 3);
-            ctx.rotate(-Math.PI / 2);
-            ctx.fillText(String(majorNumber), 0, 0);
-            ctx.restore();
-          }
+          const label = String(majorNumber);
+          ctx.save();
+          ctx.translate(rulerSize * 0.18, aligned + ctx.measureText(label).width + 2);
+          ctx.rotate(-Math.PI / 2);
+          ctx.fillText(label, 0, 0);
+          ctx.restore();
         }
       }
     }
