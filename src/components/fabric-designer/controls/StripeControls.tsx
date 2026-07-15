@@ -31,6 +31,26 @@ type StripeControlsProps = {
   onStripeWidthSlideEnd?: () => void;
 };
 
+function SelectToolIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
+    </svg>
+  );
+}
+
 function OrientationSegment({
   orientation,
   onChange,
@@ -38,28 +58,44 @@ function OrientationSegment({
   orientation: StripeOrientation | null;
   onChange: (orientation: StripeOrientation | null) => void;
 }) {
-  const segments: { value: StripeOrientation; label: string }[] = [
+  const segments: {
+    value: StripeOrientation | null;
+    label: string;
+    iconOnly?: boolean;
+  }[] = [
+    { value: null, label: "Select", iconOnly: true },
     { value: "vertical", label: "Vertical" },
     { value: "horizontal", label: "Horizontal" },
   ];
 
   return (
-    <div className="grid grid-cols-2 rounded-lg border border-stone-200 p-0.5">
+    <div
+      className="mt-3 grid grid-cols-[1fr_2fr_2fr] rounded-lg border border-stone-200 p-0.5"
+      role="radiogroup"
+      aria-label="Stripe tool"
+    >
       {segments.map((segment) => {
         const isActive = orientation === segment.value;
         return (
           <button
-            key={segment.value}
+            key={segment.label}
             type="button"
+            role="radio"
+            aria-checked={isActive}
+            aria-label={segment.iconOnly ? segment.label : undefined}
             className={[
-              "rounded-md px-3 py-2 text-sm font-semibold transition-colors",
+              "flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold transition-colors",
               isActive
                 ? "bg-stone-900 text-white"
                 : "text-stone-700 hover:bg-stone-100",
             ].join(" ")}
-            onClick={() => onChange(isActive ? null : segment.value)}
+            onClick={() => onChange(segment.value)}
           >
-            {segment.label}
+            {segment.iconOnly ? (
+              <SelectToolIcon className="h-5 w-5" />
+            ) : (
+              segment.label
+            )}
           </button>
         );
       })}
@@ -104,14 +140,12 @@ export function StripeControls({
       collapsible
       defaultCollapsed
     >
-      <Field label="Orientation">
-        <OrientationSegment
-          orientation={activeStripeBrush.orientation}
-          onChange={(orientation) =>
-            dispatch({ type: "SET_ACTIVE_STRIPE_ORIENTATION", orientation })
-          }
-        />
-      </Field>
+      <OrientationSegment
+        orientation={activeStripeBrush.orientation}
+        onChange={(orientation) =>
+          dispatch({ type: "SET_ACTIVE_STRIPE_ORIENTATION", orientation })
+        }
+      />
       <ColorPickerField
         className="mt-3"
         label="Stripe Color"
