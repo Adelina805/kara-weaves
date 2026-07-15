@@ -24,8 +24,6 @@ type FabricDesignAction =
   | { type: "SET_LOOSE_OPENNESS"; value: number }
   | { type: "SET_LOOSE_IRREGULARITY"; value: number }
   | { type: "SET_LOOSE_THREAD_OPACITY"; value: number }
-  | { type: "SET_WAFFLE_CELL_SCALE"; value: number }
-  | { type: "SET_WAFFLE_DEPTH"; value: number }
   | { type: "SET_RULERS_ENABLED"; enabled: boolean }
   | { type: "SET_DISPLAY_UNIT"; unit: RulerUnit }
   | { type: "SET_ACTIVE_STRIPE_WIDTH"; value: number }
@@ -137,28 +135,6 @@ function fabricDesignReducer(
           weave: {
             ...state.design.weave,
             loose: { ...state.design.weave.loose, threadOpacity: action.value },
-          },
-        },
-      };
-    case "SET_WAFFLE_CELL_SCALE":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          weave: {
-            ...state.design.weave,
-            waffle: { ...state.design.weave.waffle, cellScale: action.value },
-          },
-        },
-      };
-    case "SET_WAFFLE_DEPTH":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          weave: {
-            ...state.design.weave,
-            waffle: { ...state.design.weave.waffle, depth: action.value },
           },
         },
       };

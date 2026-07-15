@@ -17,7 +17,6 @@ export function createWeavePattern(
     weftThickness,
     textureAmount,
     loose,
-    waffle,
   } = params;
 
   switch (weaveType) {
@@ -29,7 +28,6 @@ export function createWeavePattern(
         warpThickness,
         weftThickness,
         textureAmount,
-        waffle,
       );
     case "loose":
       return createLooseWeavePattern(

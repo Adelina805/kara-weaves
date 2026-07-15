@@ -57,43 +57,4 @@ export function LooseWeaveControls({ loose, dispatch, visible }: LooseWeaveContr
   );
 }
 
-type WaffleWeaveControlsProps = {
-  waffle: FabricDesign["weave"]["waffle"];
-  dispatch: FabricDesignDispatch;
-  visible: boolean;
-};
-
-export function WaffleWeaveControls({ waffle, dispatch, visible }: WaffleWeaveControlsProps) {
-  if (!visible) {
-    return null;
-  }
-
-  return (
-    <Section title="Waffle Weave Settings" collapsible defaultCollapsed>
-      <Field label="Waffle cell size">
-        <RangeInput
-          min={4}
-          max={16}
-          value={waffle.cellScale}
-          valueLabel={waffle.cellScale}
-          onChange={(event) =>
-            dispatch({ type: "SET_WAFFLE_CELL_SCALE", value: Number(event.target.value) })
-          }
-        />
-      </Field>
-      <Field label="Waffle depth / raised texture">
-        <RangeInput
-          min={0}
-          max={100}
-          value={waffle.depth}
-          valueLabel={waffle.depth}
-          onChange={(event) =>
-            dispatch({ type: "SET_WAFFLE_DEPTH", value: Number(event.target.value) })
-          }
-        />
-      </Field>
-    </Section>
-  );
-}
-
 export type { WeaveType };

@@ -1,5 +1,6 @@
 import { adjustColor, darken, lighten, mix, rgbToString } from "../color";
-import type { RGB, WaffleWeaveParams } from "../types";
+import { FIXED_WAFFLE_CELL_SCALE, FIXED_WAFFLE_DEPTH } from "../defaults";
+import type { RGB } from "../types";
 
 export function createWaffleWeavePattern(
   ctx: CanvasRenderingContext2D,
@@ -8,13 +9,12 @@ export function createWaffleWeavePattern(
   warpThickness: number,
   weftThickness: number,
   textureAmount: number,
-  waffle: WaffleWeaveParams,
 ): CanvasPattern | null {
   const cellWidth = Math.max(2, warpThickness);
   const cellHeight = Math.max(2, weftThickness);
 
-  const waffleDepth = waffle.depth / 100;
-  const waffleCellScale = waffle.cellScale;
+  const waffleDepth = FIXED_WAFFLE_DEPTH / 100;
+  const waffleCellScale = FIXED_WAFFLE_CELL_SCALE;
 
   const unitW = Math.max(22, cellWidth * waffleCellScale);
   const unitH = Math.max(22, cellHeight * waffleCellScale);

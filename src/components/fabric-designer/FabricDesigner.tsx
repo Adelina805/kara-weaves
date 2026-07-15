@@ -13,10 +13,7 @@ import {
   FabricSizeSelect,
 } from "./controls/PatternAndBodyControls";
 import { StripeControls } from "./controls/StripeControls";
-import {
-  LooseWeaveControls,
-  WaffleWeaveControls,
-} from "./controls/WeaveSpecificControls";
+import { LooseWeaveControls } from "./controls/WeaveSpecificControls";
 
 type FabricControlsProps = {
   design: FabricDesign;
@@ -70,11 +67,6 @@ export function FabricControls({
         loose={design.weave.loose}
         dispatch={dispatch}
         visible={design.weaveType === "loose"}
-      />
-      <WaffleWeaveControls
-        waffle={design.weave.waffle}
-        dispatch={dispatch}
-        visible={design.weaveType === "waffle"}
       />
     </div>
   );

@@ -10,6 +10,8 @@ export const RENDER_DEFAULTS: RenderDefaults = {
 /** Fixed weave thickness (former slider minimum). */
 export const FIXED_WARP_THICKNESS = 1;
 export const FIXED_WEFT_THICKNESS = 1;
+export const FIXED_WAFFLE_CELL_SCALE = 4;
+export const FIXED_WAFFLE_DEPTH = 3;
 
 export const DEFAULT_ACTIVE_STRIPE_BRUSH: ActiveStripeBrush = {
   orientation: null,
@@ -30,10 +32,6 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
       openness: 90,
       irregularity: 60,
       threadOpacity: 65,
-    },
-    waffle: {
-      cellScale: 10,
-      depth: 80,
     },
   },
   rulers: {

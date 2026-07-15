@@ -27,7 +27,6 @@ function buildWeaveParams(
     weftThickness: FIXED_WEFT_THICKNESS,
     textureAmount,
     loose: design.weave.loose,
-    waffle: design.weave.waffle,
   };
 }
 

@@ -42,14 +42,8 @@ export type LooseWeaveParams = {
   threadOpacity: number;
 };
 
-export type WaffleWeaveParams = {
-  cellScale: number;
-  depth: number;
-};
-
 export type WeaveSettings = {
   loose: LooseWeaveParams;
-  waffle: WaffleWeaveParams;
 };
 
 export type RulerUnit = "metric" | "imperial";
@@ -85,7 +79,6 @@ export type WeavePatternParams = {
   weftThickness: number;
   textureAmount: number;
   loose: LooseWeaveParams;
-  waffle: WaffleWeaveParams;
 };
 
 export type ActiveStripeBrush = {
