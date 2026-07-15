@@ -48,8 +48,6 @@ export type WaffleWeaveParams = {
 };
 
 export type WeaveSettings = {
-  warpThickness: number;
-  weftThickness: number;
   loose: LooseWeaveParams;
   waffle: WaffleWeaveParams;
 };

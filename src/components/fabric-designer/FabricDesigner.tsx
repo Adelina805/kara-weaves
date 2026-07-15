@@ -11,7 +11,6 @@ import { StripeSelectionOverlay } from "./StripeSelectionOverlay";
 import {
   BodyColorControls,
   FabricSizeSelect,
-  WeaveOutputControls,
 } from "./controls/PatternAndBodyControls";
 import { StripeControls } from "./controls/StripeControls";
 import {
@@ -67,7 +66,6 @@ export function FabricControls({
         onStripeWidthSlideStart={onStripeWidthSlideStart}
         onStripeWidthSlideEnd={onStripeWidthSlideEnd}
       />
-      <WeaveOutputControls design={design} dispatch={dispatch} />
       <LooseWeaveControls
         loose={design.weave.loose}
         dispatch={dispatch}

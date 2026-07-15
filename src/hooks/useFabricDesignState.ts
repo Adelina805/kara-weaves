@@ -21,8 +21,6 @@ type FabricDesignAction =
   | { type: "SET_TEXTILE_PRESET"; textilePreset: TextilePresetId }
   | { type: "SET_BODY_WARP_COLOR"; color: string }
   | { type: "SET_BODY_WEFT_COLOR"; color: string }
-  | { type: "SET_WARP_THICKNESS"; value: number }
-  | { type: "SET_WEFT_THICKNESS"; value: number }
   | { type: "SET_LOOSE_OPENNESS"; value: number }
   | { type: "SET_LOOSE_IRREGULARITY"; value: number }
   | { type: "SET_LOOSE_THREAD_OPACITY"; value: number }
@@ -108,22 +106,6 @@ function fabricDesignReducer(
       return {
         ...state,
         design: { ...state.design, body: { ...state.design.body, weftColor: action.color } },
-      };
-    case "SET_WARP_THICKNESS":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          weave: { ...state.design.weave, warpThickness: action.value },
-        },
-      };
-    case "SET_WEFT_THICKNESS":
-      return {
-        ...state,
-        design: {
-          ...state.design,
-          weave: { ...state.design.weave, weftThickness: action.value },
-        },
       };
     case "SET_LOOSE_OPENNESS":
       return {

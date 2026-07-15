@@ -2,6 +2,8 @@ export { hexToRgb, rgbToString, clamp, mix, darken, lighten, adjustColor } from 
 export {
   DEFAULT_FABRIC_DESIGN,
   DEFAULT_ACTIVE_STRIPE_BRUSH,
+  FIXED_WARP_THICKNESS,
+  FIXED_WEFT_THICKNESS,
   RENDER_DEBOUNCE_MS,
   RENDER_DEFAULTS,
 } from "./defaults";

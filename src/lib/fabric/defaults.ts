@@ -7,6 +7,10 @@ export const RENDER_DEFAULTS: RenderDefaults = {
   intersectionDarkness: 0.4,
 };
 
+/** Fixed weave thickness (former slider minimum). */
+export const FIXED_WARP_THICKNESS = 1;
+export const FIXED_WEFT_THICKNESS = 1;
+
 export const DEFAULT_ACTIVE_STRIPE_BRUSH: ActiveStripeBrush = {
   orientation: null,
   width: 55,
@@ -22,8 +26,6 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
   },
   stripes: [],
   weave: {
-    warpThickness: 3,
-    weftThickness: 3,
     loose: {
       openness: 90,
       irregularity: 60,

@@ -1,4 +1,5 @@
 import { darken, hexToRgb } from "../color";
+import { FIXED_WARP_THICKNESS, FIXED_WEFT_THICKNESS } from "../defaults";
 import { rectIntersection } from "../geometry";
 import { resolveTextilePreset } from "../textile-presets";
 import type {
@@ -22,8 +23,8 @@ function buildWeaveParams(
     weaveType: design.weaveType,
     warpColor,
     weftColor,
-    warpThickness: design.weave.warpThickness,
-    weftThickness: design.weave.weftThickness,
+    warpThickness: FIXED_WARP_THICKNESS,
+    weftThickness: FIXED_WEFT_THICKNESS,
     textureAmount,
     loose: design.weave.loose,
     waffle: design.weave.waffle,

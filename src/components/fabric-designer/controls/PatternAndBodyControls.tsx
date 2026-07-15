@@ -109,38 +109,3 @@ export function BodyColorControls({ body, dispatch }: BodyColorControlsProps) {
   );
 }
 
-type WeaveOutputControlsProps = {
-  design: FabricDesign;
-  dispatch: FabricDesignDispatch;
-};
-
-export function WeaveOutputControls({ design, dispatch }: WeaveOutputControlsProps) {
-  return (
-    <Section title="Weave / Output Constraints" collapsible defaultCollapsed>
-      <Field label="Vertical weave thickness / warp thickness">
-        <input
-          type="range"
-          min={1}
-          max={30}
-          value={design.weave.warpThickness}
-          onChange={(event) =>
-            dispatch({ type: "SET_WARP_THICKNESS", value: Number(event.target.value) })
-          }
-          className="w-full accent-black"
-        />
-      </Field>
-      <Field label="Horizontal weave thickness / weft thickness">
-        <input
-          type="range"
-          min={1}
-          max={30}
-          value={design.weave.weftThickness}
-          onChange={(event) =>
-            dispatch({ type: "SET_WEFT_THICKNESS", value: Number(event.target.value) })
-          }
-          className="w-full accent-black"
-        />
-      </Field>
-    </Section>
-  );
-}
