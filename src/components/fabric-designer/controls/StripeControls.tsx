@@ -70,7 +70,7 @@ function OrientationSegment({
 
   return (
     <div
-      className="mt-3 grid grid-cols-[1fr_2fr_2fr] rounded-lg border border-stone-200 p-0.5"
+      className="mt-3 grid grid-cols-[1fr_2fr_2fr] gap-2"
       role="radiogroup"
       aria-label="Stripe tool"
     >
@@ -84,10 +84,10 @@ function OrientationSegment({
             aria-checked={isActive}
             aria-label={segment.iconOnly ? segment.label : undefined}
             className={[
-              "flex items-center justify-center rounded-md px-3 py-2 text-sm font-semibold transition-colors",
+              "flex items-center justify-center rounded-md border border-stone-200 px-3 py-2 text-sm font-semibold transition-colors",
               isActive
                 ? "bg-stone-900 text-white"
-                : "text-stone-700 hover:bg-stone-100",
+                : "bg-white text-stone-700 hover:bg-stone-100",
             ].join(" ")}
             onClick={() => onChange(segment.value)}
           >
