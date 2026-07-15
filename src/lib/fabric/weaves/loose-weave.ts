@@ -1,5 +1,5 @@
 import { adjustColor, darken, lighten, mix, rgbToString } from "../color";
-import type { LooseWeaveParams, RGB } from "../types";
+import type { RGB } from "../types";
 
 export function createLooseWeavePattern(
   ctx: CanvasRenderingContext2D,
@@ -8,14 +8,13 @@ export function createLooseWeavePattern(
   warpThickness: number,
   weftThickness: number,
   textureAmount: number,
-  loose: LooseWeaveParams,
 ): CanvasPattern | null {
   const cellWidth = Math.max(1, warpThickness);
   const cellHeight = Math.max(1, weftThickness);
 
-  const openness = loose.openness / 100;
-  const looseIrregularity = loose.irregularity / 100;
-  const looseThreadOpacity = loose.threadOpacity / 100;
+  const openness = 0;
+  const looseIrregularity = 0;
+  const looseThreadOpacity = 0;
 
   const spacingX = Math.max(8, cellWidth * (3.5 + openness * 9.5));
   const spacingY = Math.max(8, cellHeight * (3.5 + openness * 9.5));

@@ -1,6 +1,6 @@
-export type WeaveType = "plain" | "waffle" | "loose" | "thorthu" | "dobb";
+export type WeaveType = "plain" | "waffle" | "loose" | "thorthu";
 
-export type FabricPresetId = "plain" | "loose" | "waffle" | "thorthu" | "dobb";
+export type FabricPresetId = "plain" | "loose" | "waffle" | "thorthu";
 
 export type CanvasSizePresetId = "12x12" | "14x21" | "20x20" | "18x28" | "40x70";
 
@@ -36,16 +36,6 @@ export type Stripe = {
   weftColor: string;
 };
 
-export type LooseWeaveParams = {
-  openness: number;
-  irregularity: number;
-  threadOpacity: number;
-};
-
-export type WeaveSettings = {
-  loose: LooseWeaveParams;
-};
-
 export type RulerUnit = "metric" | "imperial";
 
 export type RulerSettings = {
@@ -61,7 +51,6 @@ export type FabricDesign = {
     weftColor: string;
   };
   stripes: Stripe[];
-  weave: WeaveSettings;
   rulers: RulerSettings;
 };
 
@@ -78,7 +67,6 @@ export type WeavePatternParams = {
   warpThickness: number;
   weftThickness: number;
   textureAmount: number;
-  loose: LooseWeaveParams;
 };
 
 export type ActiveStripeBrush = {

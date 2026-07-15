@@ -27,13 +27,6 @@ export const DEFAULT_FABRIC_DESIGN: FabricDesign = {
     weftColor: "#F7F3ED",
   },
   stripes: [],
-  weave: {
-    loose: {
-      openness: 90,
-      irregularity: 60,
-      threadOpacity: 65,
-    },
-  },
   rulers: {
     enabled: true,
     unit: "imperial",

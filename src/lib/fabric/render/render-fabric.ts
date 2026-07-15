@@ -26,7 +26,6 @@ function buildWeaveParams(
     warpThickness: FIXED_WARP_THICKNESS,
     weftThickness: FIXED_WEFT_THICKNESS,
     textureAmount,
-    loose: design.weave.loose,
   };
 }
 

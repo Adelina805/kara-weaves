@@ -55,7 +55,6 @@ export type {
   CanvasSizePresetId,
   FabricDesign,
   FabricPresetId,
-  LooseWeaveParams,
   ActiveStripeBrush,
   Rect,
   RenderDefaults,
@@ -66,7 +65,6 @@ export type {
   StripeOrientation,
   TextilePresetId,
   WeavePatternParams,
-  WeaveSettings,
   WeaveType,
 } from "./types";
 export { createWeavePattern } from "./weaves/create-weave-pattern";

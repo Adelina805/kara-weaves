@@ -41,11 +41,10 @@ export type ResolvedTextilePreset = {
 };
 
 export const FABRIC_PRESETS: readonly FabricPreset[] = [
-  { id: "plain", label: "Plain Weave", weaveType: "plain" },
-  { id: "loose", label: "Gauze (Loose Weave)", weaveType: "loose" },
+  { id: "plain", label: "Flat Weave", weaveType: "plain" },
+  { id: "loose", label: "Fine Weave", weaveType: "loose" },
   { id: "waffle", label: "Waffle Weave", weaveType: "waffle" },
-  { id: "thorthu", label: "Thorthu Cotton", weaveType: "thorthu" },
-  { id: "dobb", label: "Dobb Texture", weaveType: "dobb" },
+  { id: "thorthu", label: "Thick Canvas Weave", weaveType: "thorthu" },
 ] as const;
 
 export const CANVAS_SIZE_PRESETS: readonly CanvasSizePreset[] = [

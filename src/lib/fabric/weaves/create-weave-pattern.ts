@@ -1,5 +1,4 @@
 import type { WeavePatternParams } from "../types";
-import { createDobbTexturePattern } from "./dobb-texture";
 import { createLooseWeavePattern } from "./loose-weave";
 import { createPlainWeavePattern } from "./plain-weave";
 import { createThorthuCottonPattern } from "./thorthu-cotton";
@@ -9,15 +8,7 @@ export function createWeavePattern(
   ctx: CanvasRenderingContext2D,
   params: WeavePatternParams,
 ): CanvasPattern | null {
-  const {
-    weaveType,
-    warpColor,
-    weftColor,
-    warpThickness,
-    weftThickness,
-    textureAmount,
-    loose,
-  } = params;
+  const { weaveType, warpColor, weftColor, warpThickness, weftThickness, textureAmount } = params;
 
   switch (weaveType) {
     case "waffle":
@@ -37,19 +28,9 @@ export function createWeavePattern(
         warpThickness,
         weftThickness,
         textureAmount,
-        loose,
       );
     case "thorthu":
       return createThorthuCottonPattern(
-        ctx,
-        warpColor,
-        weftColor,
-        warpThickness,
-        weftThickness,
-        textureAmount,
-      );
-    case "dobb":
-      return createDobbTexturePattern(
         ctx,
         warpColor,
         weftColor,

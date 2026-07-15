@@ -13,7 +13,6 @@ import {
   FabricSizeSelect,
 } from "./controls/PatternAndBodyControls";
 import { StripeControls } from "./controls/StripeControls";
-import { LooseWeaveControls } from "./controls/WeaveSpecificControls";
 
 type FabricControlsProps = {
   design: FabricDesign;
@@ -62,11 +61,6 @@ export function FabricControls({
         onRemoveStripe={onRemoveStripe}
         onStripeWidthSlideStart={onStripeWidthSlideStart}
         onStripeWidthSlideEnd={onStripeWidthSlideEnd}
-      />
-      <LooseWeaveControls
-        loose={design.weave.loose}
-        dispatch={dispatch}
-        visible={design.weaveType === "loose"}
       />
     </div>
   );
