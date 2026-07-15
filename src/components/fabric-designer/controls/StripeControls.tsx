@@ -101,15 +101,6 @@ export function StripeControls({
   return (
     <Section
       title="STRIPE TOOL"
-      info={
-        <>
-          - Click the textile to place stripes. Drag to reposition.
-          <br />
-          - Choose orientation to activate, click again to turn off.
-          <br />
-          - Select a stripe to change color or width.
-        </>
-      }
       collapsible
       defaultCollapsed
     >
