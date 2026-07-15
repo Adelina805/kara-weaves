@@ -75,7 +75,7 @@ export function createPlainWeavePattern(
         tileCtx.fillRect(x, y + Math.floor(cellHeight * 0.35), cellWidth, 1);
       }
 
-      tileCtx.globalAlpha = 0.08 + textureAmount * 0.1;
+      tileCtx.globalAlpha = 0.025 + textureAmount * 0.04;
       tileCtx.fillStyle = "black";
 
       if (warpOnTop) {
@@ -88,7 +88,7 @@ export function createPlainWeavePattern(
     }
   }
 
-  tileCtx.globalAlpha = 0.06 + textureAmount * 0.09;
+  tileCtx.globalAlpha = 0.015 + textureAmount * 0.025;
   tileCtx.strokeStyle = "black";
   tileCtx.lineWidth = 1;
 
